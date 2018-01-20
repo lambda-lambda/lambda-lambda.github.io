@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="文档：1.1 Getting Started 参考：cs61a.org/spring2017   1.1 准备计算机科学是一门应用非常广泛的学科。全球的分布式系统，人工智能，机器人，图形，信息安全，科学计算，计算机体系结构和数十个新兴子领域的领域，每年都会因新的技术和发现而扩展。计算机科学的飞速发展带给人类生活的影响无处不出。商业，通信，科学，艺术，休闲和政治都被计算领域重新定义改造。 计算机科">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP 第一章 使用函数抽象概念 1.1 引言">
+<meta property="og:url" content="http://yoursite.com/2018/01/20/post1-1-md/index.html">
+<meta property="og:site_name" content="lambda-lambda">
+<meta property="og:description" content="文档：1.1 Getting Started 参考：cs61a.org/spring2017   1.1 准备计算机科学是一门应用非常广泛的学科。全球的分布式系统，人工智能，机器人，图形，信息安全，科学计算，计算机体系结构和数十个新兴子领域的领域，每年都会因新的技术和发现而扩展。计算机科学的飞速发展带给人类生活的影响无处不出。商业，通信，科学，艺术，休闲和政治都被计算领域重新定义改造。 计算机科">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-20T08:17:40.497Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SICP 第一章 使用函数抽象概念 1.1 引言">
+<meta name="twitter:description" content="文档：1.1 Getting Started 参考：cs61a.org/spring2017   1.1 准备计算机科学是一门应用非常广泛的学科。全球的分布式系统，人工智能，机器人，图形，信息安全，科学计算，计算机体系结构和数十个新兴子领域的领域，每年都会因新的技术和发现而扩展。计算机科学的飞速发展带给人类生活的影响无处不出。商业，通信，科学，艺术，休闲和政治都被计算领域重新定义改造。 计算机科">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/20/post1-1-md/"/>
+
+
+
+
+
+  <title>SICP 第一章 使用函数抽象概念 1.1 引言 | lambda-lambda</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lambda-lambda</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/20/post1-1-md/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lambda-lambda">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lambda-lambda">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SICP 第一章 使用函数抽象概念 1.1 引言</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T12:04:16+08:00">
+                2018-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>文档：<a href="http://composingprograms.com/pages/11-getting-started.html" target="_blank" rel="noopener">1.1 Getting Started</a></p>
+<p>参考：<a href="https://cs61a.org/" target="_blank" rel="noopener">cs61a.org/spring2017</a></p>
+</blockquote>
+<hr>
+<h2 id="1-1-准备"><a href="#1-1-准备" class="headerlink" title="1.1 准备"></a>1.1 准备</h2><p>计算机科学是一门应用非常广泛的学科。全球的分布式系统，人工智能，机器人，图形，信息安全，科学计算，计算机体系结构和数十个新兴子领域的领域，每年都会因新的技术和发现而扩展。计算机科学的飞速发展带给人类生活的影响无处不出。商业，通信，科学，艺术，休闲和政治都被计算领域重新定义改造。</p>
+<p>计算机科学的高生产力可能只是因为它的逻辑建立在一套优雅而强大的基本思想之上。所有的计算用于表示信息，指定处理它的逻辑，以及设计管理该逻辑的复杂性的抽象。这些基本原理的掌握要求我们准确地了解计算机如何解释计算机程序并执行计算过程。</p>
+<p>长期以来，Harold Abelson和Gerald Jay Sussman与Julie Sussman的经典教科书《计算机程序结构与解释》（SICP）教授了这些基本思想。该文本大量借鉴了这本教科书，原创作者根据知识共享许可证有权进行适应和重用。这些注释是根据知识共享署名非商业性共享许可证版本3发布的。</p>
+<h3 id="1-1-1-python-编程"><a href="#1-1-1-python-编程" class="headerlink" title="1.1.1 python 编程"></a>1.1.1 python 编程</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A language isn&apos;t something you learn so much as something you join.</span><br></pre></td></tr></table></figure>
+<p>为了定义计算过程，我们需要一种编程语言;最好是一门大部分人和各种各样的电脑都可以理解的语言。在本文中，我们将主要使用Python语言。</p>
+<p>Python是一种广泛使用的编程语言，它已经吸引了各种专业的爱好者：网络程序员，游戏工程师，科学家，学者甚至新的编程语言的设计师。当您学习Python时，您将加入一百万人的强大的开发人员社区。开发者社区是非常重要的机构：成员们互相帮助解决问题，分享他们的项目和经验，并共同开发软件和工具。专职会员通常会因为自己对社区的贡献而取得广泛的尊敬。</p>
+<p>Python语言本身就是一个大型志愿者社区的产物，它的贡献者十分多样。该语言是由Guido van Rossum在20世纪80年代后期设想和首次设计使用的。他在Python 3教程的第一章解释了为什么Python在今天如此多的语言中依然广受欢迎。</p>
+<p>Python是一门出色的教学语言，因为纵观它的发展历史，Python的开发人员都十分强调Python代码解析的人性化，Python的禅宗引导了美丽，简单和可读性的原则。 Python语言特别适合本文，因为它的广泛的功能支持各种不同的编程风格，这是我们将会一直探讨的。虽然Python中没有单一的编程方式，但开发人员社区共享了一套阅读，理解和扩展现有程序的约定。 Python语言的灵活性和可访问性，使学生们能够研究探索许多编程范例，然后将其新获得的知识应用于数千个正在进行的项目。</p>
+<p>这些讲义通过介绍Python的特性，采用抽象技术和严格的计算模型来保持SICP的核心精神。 此外，这些讲义提供了Python编程的实例介绍，包括一些高级语言特性和说明性示例。 通过这门课，学习Python的路径可以变得很自然。</p>
+<p>用Python语言编程的最好方法是直接与解释器进行交互。 本节介绍如何安装Python 3，启动与解释器的交互式会话，并开始编程。</p>
+<h3 id="1-1-2-python-3-安装"><a href="#1-1-2-python-3-安装" class="headerlink" title="1.1.2 python 3 安装"></a>1.1.2 python 3 安装</h3><p>与所有伟大的软件一样，Python有很多版本。 本文将使用最新的稳定版本的Python 3。许多计算机都安装了较早版本的Python，例如Python2.7，但这些版本与这门课程不符。 你应该使用任何一台能安装Python 3电脑。（别担心，Python是免费的。）</p>
+<p>您可以通过点击以3（不是2）开头的版本从Python下载页面下载Python 3。 然后按照安装程序的说明完成安装。</p>
+<p>有关进一步的指导，请参详由Julia Oh创建的这些视频教程：Windows系统安装、Mac系统安装。</p>
+<h3 id="1-1-3-交互式会话"><a href="#1-1-3-交互式会话" class="headerlink" title="1.1.3 交互式会话"></a>1.1.3 交互式会话</h3><p>在交互式Python会话中，您可以在提示符 &gt;&gt;&gt; 后键入一些Python代码。 Python解释器读取并执行您输入的内容，以及执行各种命令。</p>
+<p>要启动交互式会话，请运行Python 3的应用程序。 在终端（<code>Mac / Unix / Linux</code>）提示符下键入python3或在Windows中打开Python 3应用程序。</p>
+<p>如果您看到Python提示符 &gt;&gt;&gt; ，那么您已经成功启动了一个交互式会话。 以下描述了使用提示的交互示例，后面带有输入。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;2+2</span><br><span class="line"></span><br><span class="line">4</span><br></pre></td></tr></table></figure></p>
+<p>互动控件。 每个会话都保留了您的历史输入记录。 要访问该历史记录，请按<code>&lt;Control&gt;-P</code>（上一个）和<code>&lt;Control&gt;-N</code>（下一个）。 <code>&lt;Control&gt;</code> -D会退出一个会话，这会清除历史记录。 在某些系统上上下箭头也能循环访问历史。</p>
+<h3 id="1-1-4-第一个例子"><a href="#1-1-4-第一个例子" class="headerlink" title="1.1.4 第一个例子"></a>1.1.4 第一个例子</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">And, as imagination bodies forth</span><br><span class="line"></span><br><span class="line">The forms of things to unknown, and the poet&apos;s pen</span><br><span class="line"></span><br><span class="line">Turns them to shapes, and gives to airy nothing</span><br><span class="line"></span><br><span class="line">A local habitation and a name.</span><br><span class="line"></span><br><span class="line">                                        —William Shakespeare, A Midsummer-Night&apos;s Dream</span><br></pre></td></tr></table></figure>
+<p>为了介绍Python，我们将从一个使用几种语言功能的例子开始。 在下一节中，我们将从头开始，逐步构建语言。 您可以把这个部分看成是一个潜在的功能预览。</p>
+<p>Python内置支持常见编程活动，例如操纵文本，显示图形和互联网通信。 Python代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from urllib.request import urlopen</span><br></pre></td></tr></table></figure></p>
+<p>是一个导入语句，用于加载访问互联网上的数据。 特别是，它提供了一个名为<code>urlopen</code>的函数，它可以在统一的资源定位器（URL）访问内容，它是互联网上的某个位置。</p>
+<p>语句和表达式。 Python代码由表达式和语句组成。 广泛地说，计算机程序包括了以下两种：</p>
+<p>1.计算某个值</p>
+<p>2.执行某些操作</p>
+<p>语句通常用于描述操作。 当Python解释器执行一个语句时，它执行相应的操作。 另一方面，表达式通常描述计算。 当Python计算一个表达式时，它计算该表达式的值。 本章介绍几种类型的语句和表达式。</p>
+<p>赋值语句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; shakespeare=urlopen(&apos;http://composingprograms.com/shakespeare.txt&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>将shakespeare与之后表达式的值相关联。 该表达式在u<code>rl</code>上调用了<code>urlopen</code>函数，<code>url</code>包含威廉·莎士比亚37场剧本的完整文本。</p>
+<p>函数。函数封装了操纵数据的逻辑。 <code>urlopen</code>是一个函数。 一个网址是一个数据，莎士比亚的剧本是另一个数据。 前者产生后者的过程可能很复杂，但是我们可以仅使用一个简单的表达式来描述该过程，因为复杂性都被一个函数概括了。 函数是本章的主要内容。</p>
+<p>另一个赋值语句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; words=set(shakespeare.read().decode().split())</span><br></pre></td></tr></table></figure></p>
+<p>将words与莎士比亚戏剧中出现的所有不重复词汇集合联系在一起，该集合词汇一共33,721个。 一系列命令链<code>read</code>, <code>decode</code>, <code>split</code> 各自操作计算实体：我们从打开的<code>URL</code>中读取（<code>read</code>）数据，然后将数据解码（<code>decode</code>）为文本，最后将文本分割（<code>split</code>）成单词。 所有这些词都放在一个集合（<code>set</code>）中。</p>
+<p>对象。 集合（<code>set</code>）是一种对象，它支持设置操作如计算交叉点和测试成员。 对象无缝整合了数据和操纵数据的逻辑。 对象是第2章的主要内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; &#123;w for w in words if len(w)==6 and w[::-1] in words&#125;</span><br><span class="line"></span><br><span class="line">&#123;&apos;redder&apos;, &apos;drawer&apos;, &apos;reward&apos;, &apos;diaper&apos;, &apos;repaid&apos;&#125;</span><br></pre></td></tr></table></figure>
+<p>该表达式是一种复合表达式，求出所有正序和倒序出现的<code>Shakespearian</code>词。 秘密符号 <code>w[:: - 1]</code> 遍历了单词中的每个字母，但-1表示倒序遍历。 当您在交互式会话中输入表达式时，Python会在以下行中打印其值。</p>
+<p>解释器。 求解复合表达式需要以可预测的方式来精确执行解释器代码。 实现这样一个过程并求解复合表达式的程序，被称为解释器。 解释器的设计和实现是第三章的主要内容。</p>
+<p>与其他计算机程序相比，编程语言的解释器是独一无二的。 Python不是按照莎士比亚的想法设计的。 然而，它极大的灵活性使我们能够用少量的代码处理大量的文本。</p>
+<p>最后，我们将发现所有这些核心概念都是密切相关的：函数是对象，对象是函数，解释器是两者的实例。 然而，对这些概念及其在组织代码中的作用的清晰理解对于掌握编程艺术至关重要。</p>
+<h3 id="1-1-5-错误"><a href="#1-1-5-错误" class="headerlink" title="1.1.5 错误"></a>1.1.5 错误</h3><p>Python正在等待您的命令。 即使您可能还不了解完整的语法和结构，您也要多多探索实践。 但是做好出错的准备。 虽然计算机运行快且灵活，但也非常死板。 其特性在斯坦福大学的入门课程中有描述如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">The fundamental equation of computers is:</span><br><span class="line"></span><br><span class="line">computer = powerful + stupid</span><br><span class="line"></span><br><span class="line">Computers are very powerful, looking at volumes of data very quickly. Computers can perform billions of operations per second, where each operation is pretty simple.</span><br><span class="line"></span><br><span class="line">Computers are also shockingly stupid and fragile. The operations that they can do are extremely rigid, simple, and mechanical. The computer lacks anything like real insight ... it&apos;s nothing like the HAL 9000 from the movies. If nothing else, you should not be intimidated by the computer as if it&apos;s some sort of brain. It&apos;s very mechanical underneath it all.</span><br><span class="line"></span><br><span class="line">Programming is about a person using their real insight to build something useful, constructed out of these teeny, simple little operations that the computer can do.</span><br><span class="line"></span><br><span class="line">                                            —Francisco Cai and Nick Parlante, Stanford CS101</span><br></pre></td></tr></table></figure></p>
+<p>您尝试使用Python解释器时，你会立刻意识到计算机的古板：即使最小的拼写和格式更改也会导致意外的输出和错误。</p>
+<p>学习解释错误并诊断意外错误的原因称为调试（<code>debugging</code>）。调试的一些指导原则如下：</p>
+<p>1.逐级测试：每个精心编写的程序由可以单独测试的小型模块组成。尽快测试您写的所有内容，尽早识别问题，并从中获得自信。</p>
+<p>2.隔离错误：语句输出中的错误通常可归因于特定的模块组件。当您尝试诊断问题时，请将错误跟踪到最小的代码片段，然后再尝试更正。</p>
+<p>3.检查您的假设：解释器会执行您的指示 ——不多不少。当某些代码与程序员假定的行为不相符时，它们的输出是非预期的。了解您的假设，然后将您的调试工作集中在验证您的假设上。</p>
+<p>4.咨询他人：您不是一个人！如果您不明白错误信息，请咨询朋友，导师或搜索引擎。如果你有一个错误，但无法弄明白如何纠正它，可以请别人看看。群体解决问题的过程可以共享许多宝贵的编程知识。</p>
+<p>逐级测试，模块化设计，精确假设和团队合作是贯穿本文的主题。希望您在计算机科学学习中能一直坚持。</p>
+<p>下一节：<a href="https://www.jianshu.com/p/4a1492aff8b9" target="_blank" rel="noopener">SICP 第一章 使用函数抽象概念 1.2 编程元素</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/19/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/20/post1-2-md/" rel="prev" title="SICP 第一章 使用函数抽象概念 1.2 编程元素">
+                SICP 第一章 使用函数抽象概念 1.2 编程元素 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lambda-lambda</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-准备"><span class="nav-number">1.</span> <span class="nav-text">1.1 准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-1-python-编程"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.1 python 编程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-2-python-3-安装"><span class="nav-number">1.2.</span> <span class="nav-text">1.1.2 python 3 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-3-交互式会话"><span class="nav-number">1.3.</span> <span class="nav-text">1.1.3 交互式会话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-4-第一个例子"><span class="nav-number">1.4.</span> <span class="nav-text">1.1.4 第一个例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-5-错误"><span class="nav-number">1.5.</span> <span class="nav-text">1.1.5 错误</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lambda-lambda</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
