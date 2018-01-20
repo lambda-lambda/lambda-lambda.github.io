@@ -79,14 +79,30 @@
 
 
 
+<meta name="description" content="文档：1.3 Defining New Functions参考：cs61a.org/spring2017   我们已经在Python中确定了一些在任何强大的编程语言中都有的元素： 1.数字和算术运算是基本的内置数据值和函数。2.嵌套函数提供了组合操作的方法。3.将名称绑定到值的方式提供了有限的抽象方法。 现在我们将了解函数定义，一个更强大的抽象技术，通过该技术可以将名称绑定到复合操作上，然后将其">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SICP 第一章 使用函数抽象概念 1.3 定义新函数">
 <meta property="og:url" content="http://yoursite.com/2018/01/20/post1-3/index.html">
 <meta property="og:site_name" content="lambda-lambda">
+<meta property="og:description" content="文档：1.3 Defining New Functions参考：cs61a.org/spring2017   我们已经在Python中确定了一些在任何强大的编程语言中都有的元素： 1.数字和算术运算是基本的内置数据值和函数。2.嵌套函数提供了组合操作的方法。3.将名称绑定到值的方式提供了有限的抽象方法。 现在我们将了解函数定义，一个更强大的抽象技术，通过该技术可以将名称绑定到复合操作上，然后将其">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-20T12:56:39.562Z">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5899832-3bdad0f5d4146223.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5899832-c474bba74db91e16.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5899832-7652717c3fd34aba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5899832-ce4a00c677346674.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5899832-f900652ce7135037.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5899832-42c5afeda2668fda.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5899832-4644b6b7d5e811e2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5899832-c8e00ef9ad56c76c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5899832-2f4b9300ee0f4181.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5899832-3794147b35472872.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5899832-7834ca82d701cf5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5899832-7ba2793ca93bf7da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-01-20T15:06:11.941Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SICP 第一章 使用函数抽象概念 1.3 定义新函数">
+<meta name="twitter:description" content="文档：1.3 Defining New Functions参考：cs61a.org/spring2017   我们已经在Python中确定了一些在任何强大的编程语言中都有的元素： 1.数字和算术运算是基本的内置数据值和函数。2.嵌套函数提供了组合操作的方法。3.将名称绑定到值的方式提供了有限的抽象方法。 现在我们将了解函数定义，一个更强大的抽象技术，通过该技术可以将名称绑定到复合操作上，然后将其">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/5899832-3bdad0f5d4146223.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -316,7 +332,71 @@
       
 
       
-        
+        <blockquote>
+<p>文档：<a href="http://composingprograms.com/pages/13-defining-new-functions.html" target="_blank" rel="noopener">1.3 Defining New Functions</a><br>参考：<a href="https://cs61a.org/" target="_blank" rel="noopener">cs61a.org/spring2017</a></p>
+</blockquote>
+<hr>
+<p>我们已经在Python中确定了一些在任何强大的编程语言中都有的元素：</p>
+<p>1.数字和算术运算是基本的内置数据值和函数。<br>2.嵌套函数提供了组合操作的方法。<br>3.将名称绑定到值的方式提供了有限的抽象方法。</p>
+<p>现在我们将了解函数定义，一个更强大的抽象技术，通过该技术可以将名称绑定到复合操作上，然后将其作为单元引用。</p>
+<p>我们首先研究如何表达<code>square</code>平方的这个概念。 我们可能会说：“对数求平方就是将数自己乘上自己。”在Python中的表达如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square(x):</span><br><span class="line">        return mul(x, x)</span><br></pre></td></tr></table></figure></p>
+<p>它定义了一个赋予了名称<code>square</code>的新函数。 这个用户定义的函数并没有内置到解释器中。 它代表着自己和自己相乘的复合操作。 这个定义中的<code>x</code>称为形式参数，它为被乘的东西提供一个名称。 该定义创建了此用户定义的函数，并将其与名称<code>square</code>相关联。</p>
+<p><strong>如何定义一个函数。</strong> 函数定义包含一个<code>def</code>语句，该语句包含了<code>&lt;name&gt;</code>和一个带有名字的<code>&lt;formal parameter&gt;</code>（形式参数），然后是一个称为函数体的<code>return</code>返回语句，该语句指定了函数的<return expression="">（返回表达式），这是一个每次函数调用都需要求值的表达式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">def &lt;name&gt;(&lt;formal parameters&gt;):</span><br><span class="line">    return &lt;return expression&gt;</span><br></pre></td></tr></table></figure></return></p>
+<p>第二行必须缩进 - 按照惯例大多数程序员使用四个空格来缩进。 返回表达式不会立即求值; 它被存储为新定义函数的一部分，并且仅在函数最终被调用时被求解。</p>
+<p>定义了<code>square</code>后，我们可以用表达式来调用它：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; square(21)</span><br><span class="line">441</span><br><span class="line">&gt;&gt;&gt; square(add(2, 5))</span><br><span class="line">49</span><br><span class="line">&gt;&gt;&gt; square(square(3))</span><br><span class="line">81</span><br></pre></td></tr></table></figure></p>
+<p>我们还可以使用<code>square</code>作为构建块来定义其他功能。 例如，我们可以轻松定义一个函数<code>sum_squares</code>，给定任何两个数字作为参数，返回它们的平方之和：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def sum_squares(x, y):</span><br><span class="line">        return add(square(x), square(y))</span><br><span class="line">&gt;&gt;&gt; sum_squares(3, 4)</span><br><span class="line">25</span><br></pre></td></tr></table></figure></p>
+<p>用户定义的函数的使用方式与内置函数完全相同。 实际上，从sum_squares的例子我们可以发现，我们根本无法分辨<code>square</code>是内置在解释器中，是从模块导入的还是由用户定义得。</p>
+<p>def语句和赋值语句都是将名称绑定到值，并且任何现有的绑定都将丢失。 例如，下文的<code>g</code>首先指的是没有参数的函数，然后是一个数字，再然后是有两个参数的另一个函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def g():</span><br><span class="line">        return 1</span><br><span class="line">&gt;&gt;&gt; g()</span><br><span class="line">1</span><br><span class="line">&gt;&gt;&gt; g = 2</span><br><span class="line">&gt;&gt;&gt; g</span><br><span class="line">2</span><br><span class="line">&gt;&gt;&gt; def g(h, i):</span><br><span class="line">        return h + i</span><br><span class="line">&gt;&gt;&gt; g(1, 2)</span><br><span class="line">3</span><br></pre></td></tr></table></figure></p>
+<h3 id="1-3-1-环境"><a href="#1-3-1-环境" class="headerlink" title="1.3.1 环境"></a>1.3.1 环境</h3><p>我们的Python子集现在已经足够复杂，但程序的含义还不是很明显。 如果形式参数与内建函数具有相同的名称怎么办呢？ 两个函数可以共享名称吗？ 要解决这些问题，我们必须更详细地描述环境。</p>
+<p>表达式求值的环境由<code>frame</code>帧的序列组成，它们可以被描述为一些盒子。 每个<code>frame</code>都包含绑定，它们将名称与其对应的值相关联。<code>global frame</code>全局帧只有一个。 赋值和导入语句将条目添加到当前环境的第一帧中。 到目前为止，我们的环境只包括全局帧。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;	from math import pi</span><br><span class="line">&gt;&gt;&gt;	tau = 2 * pi</span><br></pre></td></tr></table></figure></p>
+<p>环境图示可以显示出当前环境的绑定，以及它们绑定的值。  您可以点击<a href="http://composingprograms.com/tutor.html" target="_blank" rel="noopener">Online Python Tutor</a>链接，将示例加载到<a href="http://composingprograms.com/tutor.html" target="_blank" rel="noopener">Online Python Tutor</a>，这是由<code>Philip Guo</code>创建的用于生成这些环境图的工具。 </p>
+<p>函数也出现在环境图中。 <code>import</code>导入语句将名称绑定到内置函数。 def语句将名称绑定到由用户定义函数。 导入<code>mul</code>和定义<code>square</code>后的环境如下：<br><img src="http://upload-images.jianshu.io/upload_images/5899832-3bdad0f5d4146223.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>每个函数都是以<code>func</code>开头的行，后跟函数名和形式参数。 内建函数（如<code>mul</code>）没有形式参数名称，因此总是使用。</p>
+<p>函数的名称重复两次，一次在帧中，并再次作为函数本身的一部分。 函数中出现的名称称为<code>intrinsic</code>内在名称。 帧中的名称是绑定名称。 两者之间有区别：不同的名称可能指的是相同的函数，但该函数本身只有一个内在名称。</p>
+<p>绑定到帧中的函数的名称将会在求值过程中使用。 函数的内在名称在求值中不起作用。 通过下面的示例，一旦名称<code>max</code>被绑定到值3，它将不能再被用作为一个函数。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-c474bba74db91e16.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>错误消息<code>TypeError</code>：<code>&#39;int&#39; object is not callable</code>(‘int’对象不可调用)显示名称<code>max</code>（当前绑定到数字3）是一个整型而不是一个函数。 因此，它不能被用作调用表达式中的运算符。</p>
+<p><strong>函数签名</strong>。 函数因参数的数量不同。 用户定义的函数<code>square</code>只有一个参数<code>x</code>; 提供更多或更少的参数将导致错误。 对函数的形式参数的描述被称为函数的签名。</p>
+<p>函数<code>max</code>可以有任意数量的参数。 它被渲染为<code>max(...)</code>。 不管有多少个参数，所有内置函数将被呈现为<name>（…）。</name></p>
+<h3 id="1-3-2-调用用户定义的函数"><a href="#1-3-2-调用用户定义的函数" class="headerlink" title="1.3.2  调用用户定义的函数"></a>1.3.2  调用用户定义的函数</h3><p>为了求出其操作符为用户定义函数的调用表达式，Python解释器遵循了以下计算过程。与任何调用表达式一样，解释器将对运算符和操作数表达式求值，然后将具名函数应用于生成的实参。</p>
+<p>调用用户定义的函数会引入第二个局部帧，它只能访问该函数。为了对一些实参调用用户定义的函数：</p>
+<p>1.在新的局部帧中，将实参绑定到的函数的形式参数上。<br>2.在以此帧开头的环境中求出函数体。</p>
+<p>函数体求值的环境由两个帧组成：首先是包含形式参数绑定的局部帧，然后是包含其他所有内容的全局帧。函数的每个实例都有自己的独立局部帧。</p>
+<p>为了详细说明一个例子，下面描述了相同示例的环境图的几个步骤。执行第一个<code>import</code>语句后，只有名称<code>mul</code>被绑定在全局帧中。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-7652717c3fd34aba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>首先，执行函数<code>square</code>的定义语句。 请注意，整个<code>def</code>语句在一个步骤中执行。 直到调用函数才执行函数体（不是在定义的时候）。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-ce4a00c677346674.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>接下来，使用参数-2调用<code>square</code>函数，因此创建了一个新的帧，形式参数<code>x</code>绑定到值<code>-2</code>上。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-f900652ce7135037.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>然后，在当前环境中查找名称<code>x</code>，它由所示的两个帧组成。 在这两种情况下，<code>x</code>为-2，因此<code>square</code>函数返回4。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-42c5afeda2668fda.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><code>square()</code>的帧中的“return value”不是名称绑定;而是指由创建该帧的函数调用所返回的值。</p>
+<p>即使在这个简单的例子中，也会使用两种不同的环境。 我们在全局环境中计算最上方表达式<code>square(-2)</code>，在通过调用<code>square</code>创建的环境中计算返回表达式<code>mul(x，x)</code>。<code>x</code>和<code>mul</code>都绑定在这个环境中，但是在不同的帧中。</p>
+<p>环境中的帧顺序会影响由表达式中名称检索而返回的值。 我们之前说过，名称求解为与当前环境中的该名称相关联的值。 我们现在可以更准确地说：</p>
+<p>我们关于环境，名称和函数的概念建立了求值模型; 虽然一些机械细节仍然未敲定（例如如何实现绑定），但我们的模型能准确而正确地描述解释器如何求解调用表达式。 在第三章中，我们将看到这个模型如何作为蓝图来实现编程语言的工作解释器。</p>
+<h3 id="1-3-3-示例-调用用户定义的函数"><a href="#1-3-3-示例-调用用户定义的函数" class="headerlink" title="1.3.3 示例:调用用户定义的函数"></a>1.3.3 示例:调用用户定义的函数</h3><p>让我们再次考虑两个简单的函数定义，并说明用户定义函数的调用表达式的求解过程。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-4644b6b7d5e811e2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>Python首先求出名称<code>sum_squares</code>，它绑定到了全局帧中的用户定义的函数。 基本的数字表达式5和12求值为它们表达的数值。</p>
+<p>接下来，Python调用了<code>sum_squares</code>，它引入了将<code>x</code>绑定到5和<code>y</code>绑定到12的局部帧。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/5899832-c8e00ef9ad56c76c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><code>sum_squares</code>的函数体包含以下调用表达式：<br><img src="http://upload-images.jianshu.io/upload_images/5899832-2f4b9300ee0f4181.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>所有的三个子表达式在当前环境中进行求解，它开头于标记为<code>sum_squares()</code>的帧。 运算符子表达式<code>add</code>是在全局帧中找到的名称，它绑定到内建的加法函数中。 在调用加法函数之前，两个操作数子表达式必须依次求值。 在当前以标记为<code>sum_squares</code>的帧的环境中，对两个操作数进行求值。</p>
+<p>在<code>operand 0</code>中，<code>square</code>命名了全局帧中的用户定义的函数，而<code>x</code>则命名为局部帧的数字5。 Python通过引入另一个将<code>x</code>绑定到5的局部帧来应用<code>square</code> 到5。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-3794147b35472872.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>在这种环境下，表达式mul(x，x)计算为25。</p>
+<p>我们的求值过程现在轮到<code>operand 1</code>，其中<code>y</code>的值为12. Python会再次对<code>square</code>的函数体进行求解，此时引入另一个将<code>x</code>绑定到12的局部帧。因此，<code>operand 1</code>求值为144。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-7834ca82d701cf5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>最后，对参数25和144调用加法得到<code>sum_squares</code>的最终返回值：169。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-7ba2793ca93bf7da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>这个例子说明了迄今为止我们发展出来的许多基本概念。 名称绑定到值，这些值分布在许多独立的局部帧，以及包含共享名称的单个全局帧中。 每次调用一个函数时都会引入一个新的局部帧，即使是同一个函数被调用两次的情况。</p>
+<p>所有这些机制的存在，都是为了在程序执行期间确保在正确的时间将名称解析为正确的值。 这个例子说明了为什么我们的模型需要引入的复杂性。 所有三个局部帧都包含<code>x</code>的绑定，但该名称绑定到不同的帧中的不同值上。 局部帧分离了这些名称。</p>
+<h3 id="1-3-4-局部名称"><a href="#1-3-4-局部名称" class="headerlink" title="1.3.4 局部名称"></a>1.3.4 局部名称</h3><p>函数实现的一个细节是实现者对函数的形式参数的名称的选择不应影响函数行为。 因此，以下函数应提供相同的行为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square(x):</span><br><span class="line">        return mul(x, x)</span><br><span class="line">&gt;&gt;&gt; def square(y):</span><br><span class="line">        return mul(y, y)</span><br></pre></td></tr></table></figure></p>
+<p>这个原则 – 函数应该与其编写者选择的参数名称无关 –对编程语言有重要的意义。 最简单的是函数的参数名称必须保留在函数体的局部范围内。</p>
+<p>如果参数不是它们各自函数主体的局部参数，那么在<code>square</code>中的参数<code>x</code>可能与<code>sum_squares</code>中的参数<code>x</code>混淆。 严格来说，这并不是问题所在：在不同的局部帧中的<code>x</code>绑定是不相关的。 我们的计算模型经过严谨的设计，以确保这种独立性。</p>
+<p>局部名称的作用范围仅限于定义它的用户定义函数体中。 当一个名称不能再被访问时，它就离开了作用域。 这种作用域范围界定行为不是我们模型的新事实; 这是环境的工作方式的结果。</p>
+<h3 id="1-3-5-选择名称"><a href="#1-3-5-选择名称" class="headerlink" title="1.3.5 选择名称"></a>1.3.5 选择名称</h3><p>名称的可修改性并不意味着形式参数名称不重要。相反，精心选择的函数和参数名称对于程序的可解释性至关重要！</p>
+<p>以下指导原则来自于<a href="https://www.python.org/dev/peps/pep-0008/" target="_blank" rel="noopener">Python代码的样式指南</a>，它可以作为所有（非反叛）Python程序员的指南。这些共享的约定使开发者社区的成员之间的沟通能够顺利进行。遵循这些约定有一些副作用，您将发现您的代码在内部变得一致。</p>
+<p>1.函数名称应该小写，用下划线分隔。提倡描述性名称。<br>2.函数名称通常反映解释器应用于参数的操作（例如，<code>print</code>,<code>add</code>,<code>square</code>）或结果（例如，<code>max</code>，<code>abs</code>，<code>sum</code>）。<br>3.参数名称应该小写，单词用下划线分隔。单字名称是首选。<br>4.参数名称应该反映参数在函数中的作用。<br>5.当作用明确时，单字参数名称可以接受，但避免使用<code>l</code>（小写的<code>L</code>）和<code>O</code>（大写的<code>o</code>）,或<code>I</code>（大写的<code>i</code>）以避免与数字混淆。</p>
+<p>这些指南也有许多例外，即使在Python标准库中也是如此。像英语的词汇一样，Python继承了各种贡献者的词汇，而结果并不总是一致的。</p>
+<h3 id="1-3-6-作为抽象的函数"><a href="#1-3-6-作为抽象的函数" class="headerlink" title="1.3.6 作为抽象的函数"></a>1.3.6 作为抽象的函数</h3><p>尽管函数<code>sum_squares</code>很简单，但它可以说明用户定义函数最强大的属性。 函数<code>sum_squares</code>是根据函数<code>square</code>定义的，但仅依赖于<code>square</code>的输入参数与其输出值之间的关系。</p>
+<p>我们可以编写<code>sum_squares</code>，而不用考虑自己如何计算平方数。 平方数计算的细节被隐藏了，可以以后考虑。 事实上，就<code>sum_squares</code>而言，<code>square</code>并不是一个特定的函数体，而是某个函数的抽象。 在这个抽象层次上，任何能计算平方数的函数都是等价的。</p>
+<p>因此，在只考虑返回值的情况下，以下两个计算平方数的函数是难以区分的：它们都是接受数值参数并返回该数的平方值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square(x):</span><br><span class="line">        return mul(x, x)</span><br><span class="line">&gt;&gt;&gt; def square(x):</span><br><span class="line">        return mul(x, x-1) + x</span><br></pre></td></tr></table></figure></p>
+<p>换句话说，函数定义能够隐藏细节。函数的用户可能没有自己编写功能，但从另一个程序员那里获得它作为“黑盒子”。用户只需要调用，不需要知道实现该功能的细节。 Python库具有此属性。许多开发人员使用这里定义的函数，但很少有人去研究它们的实现。</p>
+<p><strong>函数式抽象</strong>。要掌握函数式抽象，需要考虑三个核心属性。函数的域是它可以使用的参数集合；函数的范围是返回值的集合；函数的功能是它在输入和输出之间的关系（以及它可能产生的任何副作用）。通过函数的域，范围和意图理解函数式抽象对于在复杂程序中正确使用它们至关重要。</p>
+<p>例如，我们用于实现<code>sum_squares</code>的任何平方函数应具有以下属性：</p>
+<p>1.域是任意单个实数。<br>2.范围是任意非负实数。<br>3.功能是输出是输入的平方。<br>这些属性并没有描述功能如何实现的细节部分，它们已经被抽象了。</p>
+<h3 id="1-3-7-运算符"><a href="#1-3-7-运算符" class="headerlink" title="1.3.7 运算符"></a>1.3.7 运算符</h3><p>算术运算符（如<code>+</code>和<code>-</code>）在第一个例子中提供了组合方法，但是我们还没有定义一个包含这些运算符的表达式定义求值过程。</p>
+<p>带有中缀运算符的Python表达式都有自己的求值过程，但是您经常可以认为它们是调用表达式的快捷方式。 当您看到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 2 + 3</span><br><span class="line">5</span><br></pre></td></tr></table></figure></p>
+<p>的时候，可以简单地认为它是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; add(2, 3)</span><br><span class="line">5</span><br></pre></td></tr></table></figure></p>
+<p>的快捷方式。中缀符号可以嵌套，就像调用表达式一样。 Python运算符优先级采用了常规的数学规则，它指导了如何用多个运算符来求解复合表达式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 2 + 3 * 4 + 5</span><br><span class="line">19</span><br></pre></td></tr></table></figure></p>
+<p>它和以下表达式的求解结果完全相同<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; add(add(2, mul(3, 4)), 5)</span><br><span class="line">19</span><br></pre></td></tr></table></figure></p>
+<p>调用表达式中的嵌套比运算符版本更加明显，但也更难以阅读。 Python还允许使用括号对子表达式进行分组，以覆盖通常的优先级规则，或使表达式的嵌套结构更加明显。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; (2 + 3) * (4 + 5)</span><br><span class="line">45</span><br></pre></td></tr></table></figure></p>
+<p>它和以下表达式的求解结果完全相同<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; mul(add(2, 3), add(4, 5))</span><br><span class="line">45</span><br></pre></td></tr></table></figure></p>
+<p>对于除法，Python提供了两个中缀运算符：<code>/</code>和<code>//</code>。 前者是常规除法，及时是整除，结果也是浮点数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 5 / 4</span><br><span class="line">1.25</span><br><span class="line">&gt;&gt;&gt; 8 / 4</span><br><span class="line">2.0</span><br></pre></td></tr></table></figure></p>
+<p>后一个运算符<code>//</code>,直接将结果舍入到一个整数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 5 // 4</span><br><span class="line">1</span><br><span class="line">&gt;&gt;&gt; -5 // 4</span><br><span class="line">-2</span><br></pre></td></tr></table></figure></p>
+<p>这两个运算符是对<code>truediv</code>和<code>floordiv</code>函数的快捷方式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from operator import truediv, floordiv</span><br><span class="line">&gt;&gt;&gt; truediv(5, 4)</span><br><span class="line">1.25</span><br><span class="line">&gt;&gt;&gt; floordiv(5, 4)</span><br><span class="line">1</span><br></pre></td></tr></table></figure></p>
+<p>您应该在程序中自由使用中缀操作符和括号。对于简单的算术运算，Python在惯例上倾向于使用运算符而不是调用表达式。</p>
+<hr>
+
       
     </div>
     
@@ -349,6 +429,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/20/post1-6/" rel="prev" title="SICP 第一章 使用函数抽象概念 1.6 高阶函数">
+                SICP 第一章 使用函数抽象概念 1.6 高阶函数 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -400,8 +484,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -416,7 +509,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -443,6 +536,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-1-环境"><span class="nav-number">1.</span> <span class="nav-text">1.3.1 环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-2-调用用户定义的函数"><span class="nav-number">2.</span> <span class="nav-text">1.3.2  调用用户定义的函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-3-示例-调用用户定义的函数"><span class="nav-number">3.</span> <span class="nav-text">1.3.3 示例:调用用户定义的函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-4-局部名称"><span class="nav-number">4.</span> <span class="nav-text">1.3.4 局部名称</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-5-选择名称"><span class="nav-number">5.</span> <span class="nav-text">1.3.5 选择名称</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-6-作为抽象的函数"><span class="nav-number">6.</span> <span class="nav-text">1.3.6 作为抽象的函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-7-运算符"><span class="nav-number">7.</span> <span class="nav-text">1.3.7 运算符</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

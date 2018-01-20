@@ -249,6 +249,890 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/20/post2-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lambda-lambda">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lambda-lambda">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/20/post2-3/" itemprop="url">SICP 第二章 使用数据构建抽象 2.3 序列</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T23:23:32+08:00">
+                2018-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>文档：<a href="http://composingprograms.com/pages/23-sequences.html" target="_blank" rel="noopener">2.3 Sequence
+</a><br>参考：<a href="https://cs61a.org/" target="_blank" rel="noopener">cs61a.org/spring2017</a></p>
+</blockquote>
+<hr>
+<h2 id="2-3-序列"><a href="#2-3-序列" class="headerlink" title="2.3 序列"></a>2.3 序列</h2><p>序列是数据值的顺序容器。序列在计算机科学中是强大而基本的抽象。序列不是特定的抽象数据类型，而是不同类型共有的一组行为。也就是说，它们是许多序列种类，但是都有一定的属性。特别地,<br>长度。序列拥有有限的长度。空的序列长度为0。<br>元素选择。序列的每个元素都拥有相应的非负整数作为下标，它小于序列长度，以第一个元素的 0 开始。<br>Python中有各种序列的数据类型，其中最重要的一种是list列表。</p>
+<h3 id="2-3-1-列表"><a href="#2-3-1-列表" class="headerlink" title="2.3.1 列表"></a>2.3.1 列表</h3><p>列表值是可以任意长度的序列。列表有大量的内置行为，并带有表达这些行为的特定的语法。我们已经介绍过list literal，它计算了一个列表实例，以及元素选择表达式。内置的len函数返回序列的长度。下面，数字是一个有四个元素的列表。序号索引3中的元素是8。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; digits = [1, 8, 2, 8]</span><br><span class="line">&gt;&gt;&gt; len(digits)</span><br><span class="line">4</span><br><span class="line">&gt;&gt;&gt; digits[3]</span><br><span class="line">8</span><br></pre></td></tr></table></figure></p>
+<p>此外，列表可以相加或者于整数做乘法。对于序列，加法或乘法不会增添元素，而是组合或者复制序列本身。也就是说，运算符模块中的add函数生成了一个列表，它连接了add的参数。操作符中的mul函数可以使用一个列表和一个整数k来返回包含k次重复项的原始列表。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; [2, 7] + digits * 2</span><br><span class="line">[2, 7, 1, 8, 2, 8, 1, 8, 2, 8]</span><br></pre></td></tr></table></figure></p>
+<p>任何值都可以包含在列表中，包括另一个列表。元素选择可以多次应用，来在包含列表的列表中选择深层嵌套的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; pairs = [[10, 20], [30, 40]]</span><br><span class="line">&gt;&gt;&gt; pairs[1]</span><br><span class="line">[30, 40]</span><br><span class="line">&gt;&gt;&gt; pairs[1][0]</span><br><span class="line">30</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-3-2-序列迭代"><a href="#2-3-2-序列迭代" class="headerlink" title="2.3.2 序列迭代"></a>2.3.2 序列迭代</h3><p>在大多数情况下，我们希望能遍历序列中的元素，并依次为每个元素执行一些计算。这种模式非常常见，Python有一个额外的控制语句来处理顺序数据：for语句。<br>现在我们需要考虑一个值在序列中出现次数的问题。我们可以使用while循环来实现一个计数函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def count(s, value):</span><br><span class="line">        &quot;&quot;&quot;Count the number of occurrences of value in sequence s.&quot;&quot;&quot;</span><br><span class="line">        total, index = 0, 0</span><br><span class="line">        while index &lt; len(s):</span><br><span class="line">            if s[index] == value:</span><br><span class="line">                total = total + 1</span><br><span class="line">            index = index + 1</span><br><span class="line">        return total</span><br><span class="line">&gt;&gt;&gt; count(digits, 8)</span><br><span class="line">2</span><br></pre></td></tr></table></figure></p>
+<p>Python 中的for语句可以通过直接遍历元素值来简化该函数体，而无需引入名称索引（index）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def count(s, value):</span><br><span class="line">        &quot;&quot;&quot;Count the number of occurrences of value in sequence s.&quot;&quot;&quot;</span><br><span class="line">        total = 0</span><br><span class="line">        for elem in s:</span><br><span class="line">            if elem == value:</span><br><span class="line">                total = total + 1</span><br><span class="line">        return total</span><br><span class="line">&gt;&gt;&gt; count(digits, 8)</span><br><span class="line">2</span><br></pre></td></tr></table></figure></p>
+<p>一个for语句由一个以下形式的简单语句组成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for &lt;name&gt; in &lt;expression&gt;:</span><br><span class="line">    &lt;suite&gt;</span><br></pre></td></tr></table></figure></p>
+<p>一个for语句由以下步骤执行：</p>
+<ol>
+<li>评估开始的<expression>表达式，它必须能生成可迭代的值。</expression></li>
+<li>对可迭代值中的每个元素，依次：在当前帧中绑定<name>到该值上。</name></li>
+<li>执行<suite>。<br>这个执行过程是指可迭代的值。列表是一种序列，序列是可迭代的值。它们的元素按顺序被依次考虑。Python包含其他可迭代类型，但我们现在将重点聚焦序列；“iterable”这个术语的定义出现在第4章的迭代器部分。<br>这个评估过程的一个重要结果是&lt; name &gt;将被绑定到执行语句之后的序列的最后一个元素上。for循环还引入了另一种可以通过语句更新环境的方法。<br>序列拆封。程序中一个常见的模式是，有一个元素序列，这些元素本身是序列，但都是固定长度的。for语句可能包括在其头中的多个名称，以“解压缩”每个元素序列到其各自的元素中。例如，我们可能有一个两元素列表的列表。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; pairs = [[1, 2], [2, 2], [2, 3], [4, 4]]</span><br></pre></td></tr></table></figure>
+</suite></li>
+</ol>
+<p>我们希望能找到拥有相同第一和第二元素的pair的数目。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; same_count = 0</span><br></pre></td></tr></table></figure></p>
+<p>下面的for语句的header有两个名称，它们分别将x和y绑定在每个pair的第一和第二个元素上。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; for x, y in pairs:</span><br><span class="line">        if x == y:</span><br><span class="line">            same_count = same_count + 1</span><br><span class="line">&gt;&gt;&gt; same_count</span><br><span class="line">2</span><br></pre></td></tr></table></figure></p>
+<p>这种将多个名称绑定到固定长度序列中的多个值的模式称为序列解压缩；这与我们在赋值语句中看到的绑定多个名称到多个值的模式相同。<br>范围（range）。范围是Python中另一个内置类型的序列，他表示一个整数范围。范围是用范围创建的，它需要两个整数参数：第一个数字和一个大于所需区间的数字。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; range(1, 10)  # Includes 1, but not 10</span><br><span class="line">range(1, 10)</span><br></pre></td></tr></table></figure></p>
+<p>在一个范围内调用列表构造函数，以与范围相同的元素来计算列表，这样就可以很容易地检查元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; list(range(5, 8))</span><br><span class="line">[5, 6, 7]</span><br></pre></td></tr></table></figure></p>
+<p>如果只给出一个参数，那么它将被解释为从0开始的范围的最后一个值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; list(range(4))</span><br><span class="line">[0, 1, 2, 3]</span><br></pre></td></tr></table></figure></p>
+<p>范围通常显示在一个for语句的开头，他用来表示该循环被执行的次数：一个常见的约定是如果在循环体中未使用名称，则在for语句的开头中使用单个下划线字符。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; for _ in range(3):</span><br><span class="line">        print(&apos;Go Bears!&apos;)</span><br><span class="line"></span><br><span class="line">Go Bears!</span><br><span class="line">Go Bears!</span><br><span class="line">Go Bears!</span><br></pre></td></tr></table></figure></p>
+<p>这个下划线在解释器中是环境中的另一个名称，但是它在程序员中有一个约定俗成的说法，它表示这个名称不会出现在以后任何的表达式中。</p>
+<h3 id="2-3-3-序列处理"><a href="#2-3-3-序列处理" class="headerlink" title="2.3.3 序列处理"></a>2.3.3 序列处理</h3><p>序列是复合数据的一种常见形式，整个程序通常围绕这个抽象进行。有序列作为输入和输出的模块组件可以混合和匹配来执行数据处理。复杂的组件可以通过链接到一个序列处理操作的管道来定义，每一个过程都是简单而集中的。<br>列表表达式。可以通过对序列中每个元素的固定表达式求值，并在结果序列中收集结果值来表示许多序列处理操作。在Python中，列表表达式是执行这种计算的表达式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; odds = [1, 3, 5, 7, 9]</span><br><span class="line">&gt;&gt;&gt; [x+1 for x in odds]</span><br><span class="line">[2, 4, 6, 8, 10]</span><br></pre></td></tr></table></figure></p>
+<p>上面的关键字不是for语句的一部分，而是列表表达式的一部分，因为它包含在方括号内。子表达式x + 1被求值，同时x与奇数的每个元素相结合，结果的值被收集到一个列表中。<br>另一个常见的顺序处理操作是选择满足某些条件的值的子集。列表表达式也可以表达这个模式，例如选择所有的几率平均划分为25的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; [x for x in odds if 25 % x == 0]</span><br><span class="line">[1, 5]</span><br></pre></td></tr></table></figure></p>
+<p>列表表达式的通用形式是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&lt;map expression&gt; for &lt;name&gt; in &lt;sequence expression&gt; if &lt;filter expression&gt;]</span><br></pre></td></tr></table></figure></p>
+<p>为了对列表表达式求值，Python对&lt;序列表达式&gt;进行了求值，它必须返回一个可迭代的值。然后，对于按顺序的每个元素，元素值被绑定到&lt; name &gt;，筛选器表达式被求值，如果它产生一个真实值，则对映射表达式进行评估。将map表达式的值收集到一个列表中。<br>聚合。序列处理中的第三个常见模式是将序列中的所有值聚合为单个值。内置函数sum、min和max都是聚合函数的示例。<br>通过结合评估每个元素表达式的模式，选择元素的子集和聚合元素，我们可以使用序列处理方法来解决问题。<br>一个完美数是一个正整数，等于它的除数的和。n的除数是小于n的正整数，除以n。列出n的除数可以用一个列表表达式来表示。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def divisors(n):</span><br><span class="line">        return [1] + [x for x in range(2, n) if n % x == 0]</span><br><span class="line">&gt;&gt;&gt; divisors(4)</span><br><span class="line">[1, 2]</span><br><span class="line">&gt;&gt;&gt; divisors(12)</span><br><span class="line">[1, 2, 3, 4, 6]</span><br></pre></td></tr></table></figure></p>
+<p>使用除数，我们可以用另一个列表表达式来计算从1到1000的所有完美数。(1通常被认为是一个完美数，但它不符合我们对除数的定义。)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; [n for n in range(1, 1000) if sum(divisors(n)) == n]</span><br><span class="line">[6, 28, 496]</span><br></pre></td></tr></table></figure></p>
+<p>我们可以重新用我们对除数的定义来解决另一个问题：已知矩形面积，求边长都为整数的矩形的最小周长。矩形的面积等于高度与宽度的乘积。因此，如果已知面积和高度，我们可以计算矩形的宽度。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def width(area, height):</span><br><span class="line">        assert area % height == 0</span><br><span class="line">        return area // height</span><br></pre></td></tr></table></figure></p>
+<p>矩形的周长等于其边长之和。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def perimeter(width, height):</span><br><span class="line">        return 2 * width + 2 * height</span><br></pre></td></tr></table></figure></p>
+<p>具有整数边长的矩形的高度必须是其面积的除数。我们可以通过考虑所有高度来计算最小周长。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def minimum_perimeter(area):</span><br><span class="line">        heights = divisors(area)</span><br><span class="line">        perimeters = [perimeter(width(area, h), h) for h in heights]</span><br><span class="line">        return min(perimeters)</span><br><span class="line">&gt;&gt;&gt; area = 80</span><br><span class="line">&gt;&gt;&gt; width(area, 5)</span><br><span class="line">16</span><br><span class="line">&gt;&gt;&gt; perimeter(16, 5)</span><br><span class="line">42</span><br><span class="line">&gt;&gt;&gt; perimeter(10, 8)</span><br><span class="line">36</span><br><span class="line">&gt;&gt;&gt; minimum_perimeter(area)</span><br><span class="line">36</span><br><span class="line">&gt;&gt;&gt; [minimum_perimeter(n) for n in range(1, 10)]</span><br><span class="line">[4, 6, 8, 8, 12, 10, 16, 12, 12]</span><br></pre></td></tr></table></figure></p>
+<p>高阶函数。在序列处理中我们看到的情况常常被应用于高阶函数。首先，对一个序列里的每个元素进行求值也可以表达成对每个元素调用函数的形式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def apply_to_all(map_fn, s):</span><br><span class="line">        return [map_fn(x) for x in s]</span><br></pre></td></tr></table></figure></p>
+<p>选择表达式为真的元素，然后对其调用函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def keep_if(filter_fn, s):</span><br><span class="line">        return [x for x in s if filter_fn(x)]</span><br></pre></td></tr></table></figure></p>
+<p>最后，很多种形式的聚合可以被表达成：反复地对reduced应用二个参数的函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def reduce(reduce_fn, s, initial):</span><br><span class="line">        reduced = initial</span><br><span class="line">        for x in s:</span><br><span class="line">            reduced = reduce_fn(reduced, x)</span><br><span class="line">        return reduced</span><br></pre></td></tr></table></figure></p>
+<p>例如，reduce可以对一个序列里=的所有元素进行连乘。用mul作为reduce_fn，1作为initial值，reduce可以被<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; reduce(mul, [2, 4, 8], 1)</span><br><span class="line">64</span><br></pre></td></tr></table></figure></p>
+<p>上一节：<a href="http://www.jianshu.com/p/92a071af8563" target="_blank" rel="noopener">SICP 第一章 使用数据构建抽象 2.2 数据抽象</a><br>下一节：<a href="http://www.jianshu.com/p/92a071af8563" target="_blank" rel="noopener">SICP 第二章 使用数据构建抽象 2.4 序列</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/20/post2-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lambda-lambda">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lambda-lambda">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/20/post2-2/" itemprop="url">SICP 第二章 使用数据构建抽象 2.2 数据抽象</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T23:22:52+08:00">
+                2018-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>文档：<a href="http://composingprograms.com/pages/22-data-abstraction.html" target="_blank" rel="noopener">2.2 Data Abstraction
+</a><br>参考：<a href="https://cs61a.org/" target="_blank" rel="noopener">cs61a.org/spring2017</a></p>
+</blockquote>
+<hr>
+<h2 id="2-2-数据抽象"><a href="#2-2-数据抽象" class="headerlink" title="2.2 数据抽象"></a>2.2 数据抽象</h2><p>我们总希望在程序中表达世界上许多的事物，而他们中的大多数都具有复合结构。例如，地理位置具有纬度和经度坐标。为了表示位置，我们希望编程语言能够将纬度和经度结合在一起，形成一个复合数据值，这样使程序可以作为单一的概念单元来操作。</p>
+<p>复合数据的使用能够增加程序的模块性。如果我们可以将地理位置作为整体值来操作，那么我们可以将程序中各部分分离，从这些位置的本质上来处理。分离和处理数据是一种强大的设计方法，称为数据抽象。数据抽象使程序更容易设计，维护和修改。</p>
+<p>数据抽象与函数抽象类似。当我们创建函数抽象时，函数实现的细节被淡化了，特定的函数本身可以被任何具有相同行为函数所替代。换句话说，我们构建抽象将函数的使用方式与函数实现的细节分离。类似地，数据抽象将如何使用复合数据值和构建方式隔离。</p>
+<p>数据抽象的基本思想是结构化程序，以便它们操作抽象数据。也就是说，我们的程序应该使用数据，而不是做出关于数据的假设。同时，数据的具体表示方式是程序的独立部分。</p>
+<p>这两部分程序：抽象数据运行的部分和定义具体表示的部分，它们通过一组小型函数相连，实现了抽象数据。为了展示这种技术，我们将介绍一组用于操纵有理数的函数。</p>
+<h3 id="2-2-1-示例-有理数运算"><a href="#2-2-1-示例-有理数运算" class="headerlink" title="2.2.1 示例:有理数运算"></a>2.2.1 示例:有理数运算</h3><p>有理数是整数的比值，它是实数的重要子类。 如1/3或17/29的有理数通常被表示为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;numerator&gt;/&lt;denominator&gt;</span><br></pre></td></tr></table></figure></p>
+<p>其中&lt;分子&gt;和&lt;分母&gt;都是值为整数的占位符。有理数的值 需要两个部分来精确地表征。 实际上将分子和分母相除会产生一个小数近似值，从而失去精确度。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 1/3</span><br><span class="line">0.3333333333333333</span><br><span class="line">&gt;&gt;&gt; 1/3 == 0.333333333333333300000  # Dividing integers yields an approximation</span><br><span class="line">True</span><br></pre></td></tr></table></figure></p>
+<p>然而，我们可以通过将分子和分母组合在一起来创建有理数的精确表示。</p>
+<p>我们从函数抽象中了解，在我们实现程序的某些部分之前，我们已经可以高效地开始编程。 我们首先假设我们已经有了一种由分子和分母构建有理数的方法。 我们还假定，给定一个有理数，我们有办法来提取它的分子和分母。 我们进一步假设构造函数和选择器可用到如下三个函数：</p>
+<ol>
+<li>rational(n，d)返回分子为n,分母为d的有理数。</li>
+<li>numer(x)返回有理数x的分子。</li>
+<li>denom(x)返回有理数x的分母。<br>在这里我们使用强大的合成策略：心想事成。 我们还没有说出有理数是如何表示的，或者numer、denom、rational如何实现。 即使如此，如果我们确定了这三个函数，我们可以执行加法，乘法，以及测试有理数的平等：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def add_rationals(x, y):</span><br><span class="line">        nx, dx = numer(x), denom(x)</span><br><span class="line">        ny, dy = numer(y), denom(y)</span><br><span class="line">        return rational(nx * dy + ny * dx, dx * dy)</span><br><span class="line">&gt;&gt;&gt; def mul_rationals(x, y):</span><br><span class="line">        return rational(numer(x) * numer(y), denom(x) * denom(y))</span><br><span class="line">&gt;&gt;&gt; def print_rational(x):</span><br><span class="line">        print(numer(x), &apos;/&apos;, denom(x))</span><br><span class="line">&gt;&gt;&gt; def rationals_are_equal(x, y):</span><br><span class="line">        return numer(x) * denom(y) == numer(y) * denom(x)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>现在我们拥有了选择器函数numer和denom，以及构造器函数rational定义的有理数操作，但是我们还没有定义这些函数。 我们需要的是将分子和分母粘合成一个复合的整体。</p>
+<p>###2.2.2 pairs<br>为了实现数据抽象的具体层面，Python提供了一个列表<code>list</code>的复合结构，它将表达式放在方括号内，用逗号分隔。 这样的表达式称为列表文字。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; [10, 20]</span><br><span class="line">[10, 20]</span><br></pre></td></tr></table></figure></p>
+<p>列表的元素可以通过两种方式访问。 第一种方式是通过我们熟悉的多重赋值法，它将一个列表分解成元素，并将每个元素绑定到一个不同的名称。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; pair = [10, 20]</span><br><span class="line">&gt;&gt;&gt; pair</span><br><span class="line">[10, 20]</span><br><span class="line">&gt;&gt;&gt; x, y = pair</span><br><span class="line">&gt;&gt;&gt; x</span><br><span class="line">10</span><br><span class="line">&gt;&gt;&gt; y</span><br><span class="line">20</span><br></pre></td></tr></table></figure></p>
+<p>访问列表元素的第二种方法是通过下标运算符，也用方括号表示。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; pair[0]</span><br><span class="line">10</span><br><span class="line">&gt;&gt;&gt; pair[1]</span><br><span class="line">20</span><br></pre></td></tr></table></figure></p>
+<p>Python中的列表（和大多数其他编程语言中的序列）下标都是从0开始索引的，这意味着下标0表示第一个元素，下标1表示第二个元素，以此类推。 我们对这个下标惯例的直觉是,下标表 示一个元素距离元组开头有多远。</p>
+<p>与元素选择操作的等效函数称为getitem，它也使用下标以0开始的位置来在列表中选择元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from operator import getitem</span><br><span class="line">&gt;&gt;&gt; getitem(pair, 0)</span><br><span class="line">10</span><br><span class="line">&gt;&gt;&gt; getitem(pair, 1)</span><br><span class="line">20</span><br></pre></td></tr></table></figure></p>
+<p>双元素列表不是在Python中表示pairs的唯一方法。 将两个值组合成一个的任何方式都可以被认为是一对pair。 列表是一种常用的方法。 列表还可以包含两个以上的元素，我们将在本章后面探讨。</p>
+<p>表示有理数。现在我们可以将一个有理数表示为一对两个整数：分子和分母。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def rational(n, d):</span><br><span class="line">        return [n, d]</span><br><span class="line">&gt;&gt;&gt; def numer(x):</span><br><span class="line">        return x[0]</span><br><span class="line">&gt;&gt;&gt; def denom(x):</span><br><span class="line">        return x[1]</span><br></pre></td></tr></table></figure></p>
+<p>与我们之前定义的算术运算一样，我们可以用我们定义的函数来操纵有理数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; half = rational(1, 2)</span><br><span class="line">&gt;&gt;&gt; print_rational(half)</span><br><span class="line">1 / 2</span><br><span class="line">&gt;&gt;&gt; third = rational(1, 3)</span><br><span class="line">&gt;&gt;&gt; print_rational(mul_rationals(half, third))</span><br><span class="line">1 / 6</span><br><span class="line">&gt;&gt;&gt; print_rational(add_rationals(third, third))</span><br><span class="line">6 / 9</span><br></pre></td></tr></table></figure></p>
+<p>正如上面的例子所示，有理数的实现并不能将有理数化为最简。 我们可以通过修改rational来弥补这个缺陷。 如果我们有一个用于计算两个整数的最大公约数的函数，我们可以在构造pair之前将分子和分母化为最简。 这种函数已经存在于Python库中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from fractions import gcd</span><br><span class="line">&gt;&gt;&gt; def rational(n, d):</span><br><span class="line">        g = gcd(n, d)</span><br><span class="line">        return (n//g, d//g)</span><br></pre></td></tr></table></figure></p>
+<p>双斜杠运算符//表示整数除法，它会向下取整除法结果的小数部分。 由于我们知道g能整除n和d，整数除法正好适用于这里。 这个修改确保了有理数表达的最低限度。</p>
+<h3 id="2-2-3-抽象界限"><a href="#2-2-3-抽象界限" class="headerlink" title="2.2.3 抽象界限"></a>2.2.3 抽象界限</h3><p>在列举更多复合数据和数据抽象的示例之前，让我们思考一下有理数的示例产生的一些问题。 我们根据构造器rational和选择器numer和denom来定义操作。 一般来说，数据抽象的底层概念是，基于某个值的类型操作表达，为这个值的类型确定一组基本的操作。之后使用这些操作来操作数据。<br>对于有理数来说，程序的不同部分使用不同的方式来操纵有理数，如下表所述。</p>
+<table>
+<thead>
+<tr>
+<th>程序的部分….</th>
+<th>把有理数作为….</th>
+<th>仅仅用作….</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用有理数演示计算</td>
+<td>所有的数据值</td>
+<td>add_rational, mul_rational, rationals_are_equal, print_rational   </td>
+</tr>
+<tr>
+<td>创造有理数和实现有理运算</td>
+<td>分子和分母</td>
+<td>rational, numer, denom</td>
+</tr>
+<tr>
+<td>实现有理数的选择器和构造器</td>
+<td>双元素列表</td>
+<td>列表文字和元素选择</td>
+</tr>
+</tbody>
+</table>
+<p>在上面的每层中，最后一列中的函数强制划分了抽象边界。 这些功能被更高级别调用，并使用较低级别的抽象来实现。</p>
+<p>只要能够使用较高级别函数的程序使用较低级别的函数，就会发生抽象边界冲突。 例如，一个计算有理数平方的函数最好用mul_rational来实现。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square_rational(x):</span><br><span class="line">        return mul_rational(x, x)</span><br></pre></td></tr></table></figure></p>
+<p>直接指向分子和分母会发生抽象边界冲突。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square_rational_violating_once(x):</span><br><span class="line">        return rational(numer(x) * numer(x), denom(x) * denom(x))</span><br></pre></td></tr></table></figure></p>
+<p>假设用包含两个元素的list来表示有理数也会发生抽象边界冲突。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square_rational_violating_twice(x):</span><br><span class="line">        return [x[0] * x[0], x[1] * x[1]]</span><br></pre></td></tr></table></figure></p>
+<p>抽象边界冲突使程序更容易维护及修改。 依赖于特定表示的函数越少，需要改进时的发生的变更越少。即使我们改变了有理数的表示方法，square_rational平方函数也不需要更新。 相比之下，当选择器或构造函数签名更改时，square_rational_violating_once将需要更改，而只要有理数的实现方法更改，square_rational_violating_twice将需要更新。</p>
+<h3 id="2-2-4-数据属性"><a href="#2-2-4-数据属性" class="headerlink" title="2.2.4 数据属性"></a>2.2.4 数据属性</h3><p>抽象障碍塑造了我们对数据的思考。有理数字的有效表示不限于任何特定的实现（例如双元素列表）;它是由理性返回的可以传递给数字和值的值。另外，构造函数和选择符之间必须保持适当的关系。也就是说，如果我们从整数n和d构造有理数x，那么应该是numer（x）/ denom（x）等于n / d的情况。</p>
+<p>一般来说，我们可以将抽象数据类型当做一些选择器和构造器的集合。只要满足行为条件（如上述的除法属性），选择器和构造函数就构成一种数据的有效表示。抽象屏障下面的实现细节可能会改变，但是如果行为没有，则数据抽象仍然有效，并且使用此数据抽象编写的任何程序将保持正确。</p>
+<p>这个观点可以广泛应用，包括我们用来实现有理数字的pair的值。我们没有真正说过pair到底是什么，只是提及这种语言提供了用两个元素创建和操纵列表的手段。我们需要实现pair的方法是将两个值粘在一起。作为行为条件，如果一个pair ‘p’由x和y构成，那么select(p, 0)返回x, 并且select(p, 1)返回y。<br>我们并不需要用list类型来创造pairs。相反，我们可以用pair和select两个函数来表达这个概念。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def pair(x, y):</span><br><span class="line">        &quot;&quot;&quot;Return a function that represents a pair.&quot;&quot;&quot;</span><br><span class="line">        def get(index):</span><br><span class="line">            if index == 0:</span><br><span class="line">                return x</span><br><span class="line">            elif index == 1:</span><br><span class="line">                return y</span><br><span class="line">        return get</span><br><span class="line">&gt;&gt;&gt; def select(p, i):</span><br><span class="line">        &quot;&quot;&quot;Return the element at index i of pair p.&quot;&quot;&quot;</span><br><span class="line">        return p(i)</span><br></pre></td></tr></table></figure></p>
+<p>使用以上的表达，我们可以创造和操纵pairs.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; p = pair(20, 14)</span><br><span class="line">&gt;&gt;&gt; select(p, 0)</span><br><span class="line">20</span><br><span class="line">&gt;&gt;&gt; select(p, 1)</span><br><span class="line">14</span><br></pre></td></tr></table></figure></p>
+<p>这种高阶函数的使用与我们直觉的数据概念完全不同。尽管如此，这些函数足够表示pairs。函数足够表示符合数据。<br>函数式表示一对pair的要点并不是Python实际使用这种方法（处于效率的原因，列表的实现更加直接），而是它可以这样的工作。函数的表示虽然晦涩难懂，但它却是表述pairs的完全合适的方法，因为它满足了pairs需要完成的唯一条件。数据抽象的实现使我们能够轻松地在各种表示中切换。</p>
+<p>上一节：<a href="http://www.jianshu.com/p/84355484bbc8" target="_blank" rel="noopener">SICP 第一章 使用数据构建抽象 2.1 引言</a><br>下一节：<a href="http://www.jianshu.com/p/91f00ae29fcc" target="_blank" rel="noopener">SICP 第二章 使用数据构建抽象 2.3 序列</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/20/post2-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lambda-lambda">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lambda-lambda">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/20/post2-1/" itemprop="url">SICP 第二章 使用数据构建抽象 2.1 引言</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T23:22:42+08:00">
+                2018-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>文档：<a href="http://composingprograms.com/pages/21-introduction.html" target="_blank" rel="noopener">2.1 Introduction
+</a><br>参考：<a href="https://cs61a.org/" target="_blank" rel="noopener">cs61a.org/spring2017</a></p>
+</blockquote>
+<hr>
+<h2 id="2-1-引言"><a href="#2-1-引言" class="headerlink" title="2.1 引言"></a>2.1 引言</h2><p>在第1章中，我们学习了在程序设计中的计算过程和函数的功能。 我们学习了如何使用原始数据（数字）和原始操作（算术），如何通过组合和控制构建复合函数，以及如何通过给进程命名来创建功能抽象。 我们还学习了，高阶函数如何通过一般的操作提高效率。 这些就是编程的本质。</p>
+<p>本章重点介绍数据。 我们在本章研究的技术将使我们能够表达和操纵不同领域的信息。 由于互联网的爆炸性增长，大量的结构化信息可以免费从网上获得，计算可以广泛应用于不同问题。 有效使用内置和用户定义的数据类型是数据处理的基础。</p>
+<h3 id="2-1-1-原始数据类型"><a href="#2-1-1-原始数据类型" class="headerlink" title="2.1.1 原始数据类型"></a>2.1.1 原始数据类型</h3><p>python里的每一个值都有一个类型。相同类型的数据表现也相仿。例如：整数1和2都是<code>int</code>类型的实例。内置函数<code>type</code>可以让我们查看值的类型.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; type(2)</span><br><span class="line">&lt;class &apos;int&apos;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>我们迄今为止使用的值是Python语言内置的少量原始数据类型的实例。 原始数据类型具有以下属性：</p>
+<p>1.原始表达式可以计算这些类型的值，称为<code>literal</code>字面量。<br>2.内置函数和运算符可以来操作这些值。<br><code>int</code>类是用于表示整数的原始数据类型。 整数字面量（相邻数字的序列）求值为int值，算术运算符操作数值对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 12 + 3000000000000000000000000</span><br><span class="line">3000000000000000000000012</span><br></pre></td></tr></table></figure></p>
+<p>Python 包含了三个原始数值类型:整数( int )、实数( float )和复数 ( complex )。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; type(1.5)</span><br><span class="line">&lt;class &apos;float&apos;&gt;</span><br><span class="line">&gt;&gt;&gt; type(1+1j)</span><br><span class="line">&lt;class &apos;complex&apos;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>名称<code>float</code>来源于实数在 Python 中表示的方式:“浮点”表示。虽然数值表示的细节不是这章的话题,一些 int 和 float 对象的高层差异仍然很重要。特别是, int 对象只能表示整数,但是表示得更精确,不带有任何近似。另一方面, float 对象可以表示很大范围内的分数,但是不能表示所有有理数。然而,浮点对象通常用于近似表示实数和有理数,舍入到某个有效数字的数值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 7 / 3 * 3</span><br><span class="line">7.0</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 1 / 3 * 7 * 3</span><br><span class="line">6.999999999999999</span><br></pre></td></tr></table></figure>
+<p>将一个int除以另一个就会产生一个浮点值：对两个整数的实际比例进行近似。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; type(1/3)</span><br><span class="line">&lt;class &apos;float&apos;&gt;</span><br><span class="line">&gt;&gt;&gt; 1/3</span><br><span class="line">0.3333333333333333</span><br></pre></td></tr></table></figure></p>
+<p>当我们进行是否相等的测试时，会出现这种近似的问题。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 1/3 == 0.333333333333333312345  # Beware of float approximation</span><br><span class="line">True</span><br></pre></td></tr></table></figure></p>
+<p>int和float类之间的微妙差异对于程序编写很有影响，因此它们是程序员必须记住的细节。幸运的是，原始数据类型很少，这大大减少了我们熟练编程语言所需的记忆量。此外，这些相同的细节在许多编程语言中是一致的，由<a href="http://en.wikipedia.org/wiki/IEEE_floating_point" target="_blank" rel="noopener">IEEE 754 floating point standard</a>等社区准则执行。</p>
+<p>非数字类型。数值可以表示许多其他类型的数据，例如声音，图像，位置，网址，网络连接等。一些由原始数据类型表示，例如值为<code>True</code>和<code>False</code>的<code>bool</code>类。</p>
+<p>以下部分将介绍Python中更多的原始数据类型，重点介绍其在创建数据抽象中的作用。对于有兴趣了解更多细节的人，在线书籍“Dive Into Python 3”中有关原始数据类型的一章，将对所有Python本机数据类型以及如何操作它们进行实用的概述，包括大量使用示例和实践。</p>
+<p>上一节：<a href="http://www.jianshu.com/p/69081ac061d9" target="_blank" rel="noopener">SICP 第一章 使用函数抽象概念 1.7 递归函数</a><br>下一节：<a href="http://www.jianshu.com/p/92a071af8563" target="_blank" rel="noopener">SICP 第二章 使用数据构建抽象 2.2 数据抽象</a></p>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/20/post1-7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lambda-lambda">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lambda-lambda">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/20/post1-7/" itemprop="url">SICP 第一章 使用函数抽象概念 1.7 递归函数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T23:22:34+08:00">
+                2018-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>文档：<a href="http://composingprograms.com/pages/17-recursive-functions.html" target="_blank" rel="noopener">1.7 Recursive Functions
+</a><br>参考：<a href="https://cs61a.org/" target="_blank" rel="noopener">cs61a.org/spring2017</a></p>
+</blockquote>
+<hr>
+<h2 id="1-7-递归函数"><a href="#1-7-递归函数" class="headerlink" title="1.7 递归函数"></a>1.7 递归函数</h2><p>如果函数的主体直接或间接地调用函数本身，则函数被称为<code>recursive</code>递归。 也就是说，执行递归函数体的过程可能需要再次应用该函数。 递归函数在Python中不使用任何特殊的语法，但它们需要一些努力才容易理解和创建。</p>
+<p>我们将从一个示例问题开始：编写将一个自然数的每位数字相加的函数。 在设计递归函数时，我们希望能找到一种将问题简单化的方法。 在这个示例里，运算符<code>％</code>和<code>//</code>可用于将数字分成两部分：其最后一位数字和除最后一位数字之外的所有数字。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 18117 % 10</span><br><span class="line">7</span><br><span class="line">&gt;&gt;&gt; 18117 // 10</span><br><span class="line">1811</span><br></pre></td></tr></table></figure></p>
+<p>18117的每位数字之和为1 + 8 + 1 + 1 + 7 = 18。正如我们可以分开数字一样，我们可以将这个数值分解为最后一个数字7，以及除最后一个数字之外的所有数字之和， 1 + 8 + 1 + 1 = 11。这样我们给出了一个算法：想要把将数字n的每位数字相加，等价于将其最后一个数字<code>n％10</code>加到<code>n // 10</code>的每位数字之和上。这里有一个特殊情况： 如果这个数是单位数字，那么它的数字的总和本身就是本身。 该算法可以用递归函数来实现。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def sum_digits(n):</span><br><span class="line">        &quot;&quot;&quot;Return the sum of the digits of positive integer n.&quot;&quot;&quot;</span><br><span class="line">        if n &lt; 10:</span><br><span class="line">            return n</span><br><span class="line">        else:</span><br><span class="line">            all_but_last, last = n // 10, n % 10</span><br><span class="line">            return sum_digits(all_but_last) + last</span><br></pre></td></tr></table></figure></p>
+<p><code>sum_digits</code>的这个定义是完整和正确的，即使<code>sum_digits</code>函数在其自身的内部被调用。 将一个数的每位数字相加的问题分为两个步骤：将除最后一位之外的所有数字相加，然后添加最后一位数字。 这两个步骤都比原问题简单。 该函数是递归的，因为第一步处理是与原问题相同的问题。 也就是说，<code>sum_digits</code>正是我们为了实现<code>sum_digits</code>而需要的函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; sum_digits(9)</span><br><span class="line">9</span><br><span class="line">&gt;&gt;&gt; sum_digits(18117)</span><br><span class="line">18</span><br><span class="line">&gt;&gt;&gt; sum_digits(9437184)</span><br><span class="line">36</span><br><span class="line">&gt;&gt;&gt; sum_digits(11408855402054064613470328848384)</span><br><span class="line">126</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/5899832-8d3e36524b32d7e8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>当执行<code>def</code>语句时，<code>sum_digits</code>的名称被绑定到一个新的函数，但函数体尚未执行。因此，<code>sum_digits</code>的循环性并不是问题。然后，<code>sum_digits</code>被在<code>738</code>上调用：</p>
+<ol>
+<li>创建一个<code>n = 738</code>的<code>sum_digits</code>的局部帧，<code>sum_digits</code>的主体在以该帧开始的环境中执行。</li>
+<li>由于<code>738</code>不小于<code>10</code>，执行第4行的赋值语句时，将<code>738</code>分解为<code>73</code>和<code>8</code>。</li>
+<li>在以下return语句中，<code>sum_digits</code>在73上调用，这是当前环境中的<code>all_but_last</code>的值。</li>
+<li>创建<code>sum_digits</code>的另一个局部帧，此时<code>n</code>被绑定到<code>73</code>上。 <code>sum_digits</code>的主体再次在以此帧开始的新环境中执行。</li>
+<li>由于<code>73</code>也不小于<code>10</code>，<code>73</code>被分为<code>7</code>和<code>3</code>，并且<code>sum_digits</code>在<code>7</code>上被调用，所以在此帧中计算<code>all_but_last</code>的值。</li>
+<li>创建<code>sum_digits</code>的第三个局部帧，其中<code>n</code>为<code>7</code>。</li>
+<li>在从这个帧开始的环境中，确定符合<code>n &lt;10</code>，因此返回<code>7</code>。</li>
+<li>在第二个局部帧中，此返回值<code>7</code>与<code>3</code>相加，最后的值返回<code>10</code>。</li>
+<li>在第一个局部帧中，返回值<code>10</code>与最后一个值<code>8</code>相加，返回<code>18</code>。<br>该函数的循环体，虽然被应用了两次，但每次都有一个不同的参数，所有这个递归函数调用正确。此外，第二次调用的数字求和问题是比第一次更简单的问题。我们生成调用<code>sum_digits(18117)</code>的环境图示，看到对<code>sum_digits</code>的每个连续调用都比上一个参数更小，直到最终达到单位数输入。</li>
+</ol>
+<p>这个例子还说明了简单函数体如何通过使用递归来演化复杂的计算过程。</p>
+<h3 id="1-7-1-解剖递归函数"><a href="#1-7-1-解剖递归函数" class="headerlink" title="1.7.1 解剖递归函数"></a>1.7.1 解剖递归函数</h3><p>常见的模式可以在许多递归函数的体中找到。函数体以<code>base case</code>基线条件开始，它是一个定义了最简单处理输入函数的行为条件的语句。在<code>sum_digits</code>例子里面，<code>base case</code>基线条件是任何的单位数的参数，处理方法是返回该参数。一些递归函数可能会有多个<code>base case</code>基线条件。</p>
+<p><code>base case</code>基线条件之后是一个或多个递归调用。递归调用始终具有某种特性：它们能简化原始问题。递归函数通过逐步简化问题来表达计算过程。例如，将<code>7</code>的每位数字相加比把<code>73</code>的每位数字相加简单得多，而这又比对`738的每位数字求和更简单。对于每个后续调用，剩下的工作会越来越少。</p>
+<p>递归函数解决问题的方式与之前的迭代方法完全不同。比如用函数<code>fact</code>计算n次阶乘，其中<code>fact(4)</code>计算结果为：4！= 4⋅3⋅2⋅1 = 24。</p>
+<p>使用<code>while</code>语句的编程思路是通过将小于等于n的每个正整数相乘来累积出结果。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def fact_iter(n):</span><br><span class="line">        total, k = 1, 1</span><br><span class="line">        while k &lt;= n:</span><br><span class="line">            total, k = total * k, k + 1</span><br><span class="line">        return total</span><br><span class="line">&gt;&gt;&gt; fact_iter(4)</span><br><span class="line">24</span><br></pre></td></tr></table></figure></p>
+<p>另一方面，阶乘的递归实现可以用<code>fact(n - 1)</code>来表达<code>fact(n)</code>，这样就转化成了一个更简单的问题。 递归的基线条件是问题的最简形式：<code>fact(1) = 1</code></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/5899832-6ba8df6c8e9a3da5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>这两个阶乘函数在思路上有本质不同。 迭代函数通过对每项进行连续乘法将基线条件<code>1</code>的结果构造到最终数值。 但是，递归函数直接从最后一项<code>n</code>构造结果，并且将问题转化成<code>fact(n - 1)</code>。</p>
+<p>由于递归通过将<code>fact</code>函数连续应用到更简单的问题实例中”展开“，结果最终从基线条件开始构建。整个递归体在将参数1传递给<code>fact</code>后结束; 每次调用的结果取决于下一次调用，直到符合基线条件。</p>
+<p>这个递归函数的正确性很容易从递归的数学标准定义中进行验证：<br><img src="http://upload-images.jianshu.io/upload_images/5899832-569de40f28cdba2f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>虽然我们可以使用我们的计算模型把递归展开，但是将递归调用视为函数抽象往往更为清晰。 也就是说，我们不需要太关心<code>fact(n - 1)</code>是如何实现的; 我们只需要知道它可以来计算<code>n-1</code>的阶乘。 将递归调用视为函数抽象可以说是“信念的递归飞跃”。 我们自己定义一个函数，只要相信在验证函数的正确性时，更简单的情况能正常工作就可以了。 在这个例子中，我们相信<code>fact(n - 1)</code>能正确地计算<code>(n-1)！</code> 。我们只需要检查一下<code>n!</code> , 如果这个假设成立，那它就能正确计算。 以这种方式，验证递归函数的正确性实际上是一种归纳证明。</p>
+<h3 id="1-7-2-相互递归"><a href="#1-7-2-相互递归" class="headerlink" title="1.7.2 相互递归"></a>1.7.2 相互递归</h3><p>比如有一个函数<code>f</code>，里面调用了函数<code>g</code>，而函数<code>g</code>里面又调用了函数<code>f</code>。像这种函数<code>f</code>跟函数<code>g</code>，相互调用，那么我们就称这样的递归为相互递归 。例如，判断一个数是偶数，还是奇数就是一个最简单的相互递归。通过数学知识，我们很容易知道有以下的定义：</p>
+<ol>
+<li>如果一个数是奇数，那它的后一位数一定是偶数。</li>
+<li>如果一个数是偶数，那它的后一位数一定是奇数。</li>
+<li>0是偶数</li>
+</ol>
+<p>使用这个定义，我们可以用相互递归的函数来判断数字是偶数还是奇数：<br><img src="http://upload-images.jianshu.io/upload_images/5899832-c43b956a285347b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>通过打破两个函数之间的抽象边界，我们可以将相互递归函数转化为单个递归函数。 在以上例子中<code>is_odd</code>的函数体可以被合并到<code>is_even</code>的内容中。参数传递时，要确保用<code>n-1</code>来代替<code>n</code>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def is_even(n):</span><br><span class="line">        if n == 0:</span><br><span class="line">            return True</span><br><span class="line">        else:</span><br><span class="line">            if (n-1) == 0:</span><br><span class="line">                return False</span><br><span class="line">            else:</span><br><span class="line">                return is_even((n-1)-1)</span><br></pre></td></tr></table></figure></p>
+<p>因此，相互递归并不比简单递归更强大，它提供了在复杂的递归程序中维护抽象的机制。</p>
+<h3 id="1-7-3-递归函数中的打印"><a href="#1-7-3-递归函数中的打印" class="headerlink" title="1.7.3 递归函数中的打印"></a>1.7.3 递归函数中的打印</h3><p>通过递归函数演化的计算过程通常可以使用打印调用进行可视化。 例如，我们将实现一个函数<code>cascade</code>，它将数字的所有前缀从最大到最小，又从最小到最大打印出来。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def cascade(n):</span><br><span class="line">        &quot;&quot;&quot;Print a cascade of prefixes of n.&quot;&quot;&quot;</span><br><span class="line">        if n &lt; 10:</span><br><span class="line">            print(n)</span><br><span class="line">        else:</span><br><span class="line">            print(n)</span><br><span class="line">            cascade(n//10)</span><br><span class="line">            print(n)</span><br><span class="line">&gt;&gt;&gt; cascade(2013)</span><br><span class="line">2013</span><br><span class="line">201</span><br><span class="line">20</span><br><span class="line">2</span><br><span class="line">20</span><br><span class="line">201</span><br><span class="line">2013</span><br></pre></td></tr></table></figure></p>
+<p><code>cascade</code>的另一种写法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def cascade(n):</span><br><span class="line">        &quot;&quot;&quot;Print a cascade of prefixes of n.&quot;&quot;&quot;</span><br><span class="line">        print(n)</span><br><span class="line">        if n &gt;= 10:</span><br><span class="line">            cascade(n//10)</span><br><span class="line">            print(n)</span><br></pre></td></tr></table></figure></p>
+<p>相互递归的另一个例子是一个双人游戏：最初在桌子上有n个鹅卵石；玩家轮流从桌子上移除一个或两个鹅卵石；移除最后一个鹅卵石的玩家获胜。 假设Alice和Bob玩这个游戏，他们每次都使用以下策略：</p>
+<p>1.Alice每次都拿掉一个鹅卵石<br>2.如果桌子上的石头数量为偶数，Bob就会拿掉两个；不然，Bob只拿一个</p>
+<p>如果鹅卵石初始值为n并且游戏由Alice开始，谁能赢比赛呢？</p>
+<p>我们将每个策略封装在自己的函数中，这样能让我们在修改一个策略的同时不会影响另一个策略，维护了两者之间的抽象界限。 这个游戏是轮流进行的，这两个函数在每一回合结束时需要相互调用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def play_alice(n):</span><br><span class="line">        if n == 0:</span><br><span class="line">            print(&quot;Bob wins!&quot;)</span><br><span class="line">        else:</span><br><span class="line">            play_bob(n-1)</span><br><span class="line">&gt;&gt;&gt; def play_bob(n):</span><br><span class="line">        if n == 0:</span><br><span class="line">            print(&quot;Alice wins!&quot;)</span><br><span class="line">        elif is_even(n):</span><br><span class="line">            play_alice(n-2)</span><br><span class="line">        else:</span><br><span class="line">            play_alice(n-1)</span><br><span class="line">&gt;&gt;&gt; play_alice(20)</span><br><span class="line">Bob wins!</span><br></pre></td></tr></table></figure></p>
+<p>在<code>play_bob</code>函数中，我们可以发现函数体中可能出现多个递归调用。 但是，在这个例子中，每次调用<code>play_bob</code>最多只会调用一次<code>play_alice</code>。 在下一节中，我们会讨论当单个函数调用导致多个递归调用时会发生什么。</p>
+<h3 id="1-7-4-树形递归"><a href="#1-7-4-树形递归" class="headerlink" title="1.7.4 树形递归"></a>1.7.4 树形递归</h3><p>另一种常见的计算模式称为树形递归，这种情况下函数自己调用不止一次。 例如，计算斐波那契数列，其中每个数字是前两个数的和。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-24756a56cfa22f9c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>相对于我们以前的尝试，这种递归定义更有吸引力：它完全反映了斐波纳契数列的定义。 具有多个递归调用的函数被称为树形递归，因为每个调用由多个较小的调用的分支组成，每个调用的分支又可以由更小的调用分支组成，正如树的分支一样。</p>
+<p>我们之前已经能够定义一个函数来计算没有树形递归的斐波那契数列。 事实上，我们以前的方法更有效率，这是本文后面将讨论的主题。 接下来，我们将讨论为什么树形递归比任何替代的迭代方案简单得多。</p>
+<h3 id="1-7-5-示例：拆分"><a href="#1-7-5-示例：拆分" class="headerlink" title="1.7.5 示例：拆分"></a>1.7.5 示例：拆分</h3><p>把正整数n拆分成几个正整数相加的和的形式，其中任意一个正整数都不能大于m。 例如，使用4作为6的拆分数的话，可以有9种情况。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1.  6 = 2 + 4</span><br><span class="line">2.  6 = 1 + 1 + 4</span><br><span class="line">3.  6 = 3 + 3</span><br><span class="line">4.  6 = 1 + 2 + 3</span><br><span class="line">5.  6 = 1 + 1 + 1 + 3</span><br><span class="line">6.  6 = 2 + 2 + 2</span><br><span class="line">7.  6 = 1 + 1 + 2 + 2</span><br><span class="line">8.  6 = 1 + 1 + 1 + 1 + 2</span><br><span class="line">9.  6 = 1 + 1 + 1 + 1 + 1 + 1</span><br></pre></td></tr></table></figure></p>
+<p>我们将定义一个函数count_partitions(n，m)，返回值是正整数n的不同拆分方法的数量，其中每个拆分数不能大于m，即最大拆分数为m。 如下，该函数有树形递归的简单解决方案：</p>
+<p>用m作为最大拆分数的n的拆分方法有：</p>
+<ol>
+<li>使用最大到m的正整数来拆分n-m的方式的数量，加上</li>
+<li>使用最大到m-1的正整数来拆分n的方式的数量。</li>
+</ol>
+<p>来看看为什么这是真的，通过观察可以发现拆分n的方法可以分为两组：那些至少包括一个m的和那些完全不包含m的。 此外，第一组中的每个拆分方法是n-m的拆分，之后再加上m。 在上面的例子中，前两个拆分法包含4，其余的不包含。</p>
+<p>因此，我们把问题简化成两步：（1）拆分更小的数n-m，（2）使用最大为m-1的数来进行拆分。</p>
+<p>要完成函数实现，我们需要指定以下基线条件：<br>1.拆分0的方式只有一种：不包括任何部分<br>2.拆分负数n的方式有0种。<br>3.拆分任何大于0的n但是用小于等于0作为组成部分的分割方式只有0种。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def count_partitions(n, m):</span><br><span class="line">        &quot;&quot;&quot;Count the ways to partition n using parts up to m.&quot;&quot;&quot;</span><br><span class="line">        if n == 0:</span><br><span class="line">            return 1</span><br><span class="line">        elif n &lt; 0:</span><br><span class="line">            return 0</span><br><span class="line">        elif m == 0:</span><br><span class="line">            return 0</span><br><span class="line">        else:</span><br><span class="line">            return count_partitions(n-m, m) + count_partitions(n, m-1)</span><br><span class="line">&gt;&gt;&gt; count_partitions(6, 4)</span><br><span class="line">9</span><br><span class="line">&gt;&gt;&gt; count_partitions(5, 5)</span><br><span class="line">7</span><br><span class="line">&gt;&gt;&gt; count_partitions(10, 10)</span><br><span class="line">42</span><br><span class="line">&gt;&gt;&gt; count_partitions(15, 15)</span><br><span class="line">176</span><br><span class="line">&gt;&gt;&gt; count_partitions(20, 20)</span><br><span class="line">627</span><br></pre></td></tr></table></figure></p>
+<p>我们可以把树形递归函数理解为在进行不同可能性的探索。在这个例子中，我们探索可以用作拆分的m的大小的可能性以及不可用作拆分的可能性。第一以及第二个递归调用对应这些可能性。</p>
+<p>用非递归方式实现这个函数需要更多的投入，我们鼓励感兴趣的读者多多尝试。</p>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/20/post1-6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lambda-lambda">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lambda-lambda">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/20/post1-6/" itemprop="url">SICP 第一章 使用函数抽象概念 1.6 高阶函数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T23:22:32+08:00">
+                2018-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>文档：<a href="http://composingprograms.com/pages/16-higher-order-functions.html" target="_blank" rel="noopener">1.6 Elements of Programming</a><br>参考：<a href="https://cs61a.org/" target="_blank" rel="noopener">cs61a.org/spring2017</a></p>
+</blockquote>
+<hr>
+<h2 id="1-6-高阶函数"><a href="#1-6-高阶函数" class="headerlink" title="1.6 高阶函数"></a>1.6 高阶函数</h2><p>我们已经看到，函数是一种抽象方法，它用于描述独立于它们的参数的复合运算。比如函数<code>square</code>，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square(x):</span><br><span class="line">        return x * x</span><br></pre></td></tr></table></figure></p>
+<p>我们不是在谈论特定值的平方，而是在讨论一个能获得任何数值平方数的方法。 当然，我们可以不去定义这个函数，总是编写诸如以下的表达式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 3 * 3</span><br><span class="line">9</span><br><span class="line">&gt;&gt;&gt; 5 * 5</span><br><span class="line">25</span><br></pre></td></tr></table></figure></p>
+<p>并且永远不会明确地提到<code>square</code>。这种做法对于诸如<code>square</code>的简单计算就足够了，但是对于更复杂的例子，例如<code>abs</code>或<code>fib</code>就将变得很困难。一般来说，缺乏函数定义将使我们处于不利之地，它迫使我们始终工作在非常原始的操作层面（这个例子中是乘法）而不是在较高级别操作。我们的程序能够计算平方，但是我们的语言将缺乏表达平方概念的能力。</p>
+<p>我们应从强大的编程语言中索求的事情之一，就是通过将名称分配给常用模式来构建抽象的能力。函数提供这种能力。正如我们将在下面的例子中看到的，代码中会反复出现一些常见的编程模式，但是使用一些不同函数来实现。这些模式也可以被抽象和给予名称。</p>
+<p>为了将特定的常用模式表达为具名概念，我们将需要构造可以接受其他函数作为参数或将函数作为返回值的函数。操纵函数的函数称为高阶函数。本节介绍了高阶函数如何作为强大的抽象机制，极大增加了语言的表现力。</p>
+<h3 id="1-6-1-作为参数的函数"><a href="#1-6-1-作为参数的函数" class="headerlink" title="1.6.1 作为参数的函数"></a>1.6.1 作为参数的函数</h3><p>以下三个函数都能计算总和。第一个函数<code>sum_naturals</code>，计算 n个自然数的和:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def sum_naturals(n):</span><br><span class="line">        total, k = 0, 1</span><br><span class="line">        while k &lt;= n:</span><br><span class="line">            total, k = total + k, k + 1</span><br><span class="line">        return total</span><br><span class="line">&gt;&gt;&gt; sum_naturals(100)</span><br><span class="line">5050</span><br></pre></td></tr></table></figure></p>
+<p>第二个函数<code>sum_cubes</code>，计算n个自然数的立方和:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def sum_cubes(n):</span><br><span class="line">        total, k = 0, 1</span><br><span class="line">        while k &lt;= n:</span><br><span class="line">            total, k = total + k*k*k, k + 1</span><br><span class="line">        return total</span><br><span class="line">&gt;&gt;&gt; sum_cubes(100)</span><br><span class="line">25502500</span><br></pre></td></tr></table></figure></p>
+<p>第三个函数<code>pi_sum</code>,计算以下一系列项的总和:<br><img src="http://upload-images.jianshu.io/upload_images/5899832-a520ca96ba95efdf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>它会慢慢收敛于<code>pi</code>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def pi_sum(n):</span><br><span class="line">        total, k = 0, 1</span><br><span class="line">        while k &lt;= n:</span><br><span class="line">            total, k = total + 8 / ((4*k-3) * (4*k-1)), k + 1</span><br><span class="line">        return total</span><br><span class="line">&gt;&gt;&gt; pi_sum(100)</span><br><span class="line">3.1365926848388144</span><br></pre></td></tr></table></figure></p>
+<p>明显地，这三个函数拥有一个相同的模式。 它们大部分是相同的，仅在函数名和用于计算被加项的k的方法有所不同。 我们可以通过填写相同模板中的槽位来生成每个函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def &lt;name&gt;(n):</span><br><span class="line">    total, k = 0, 1</span><br><span class="line">    while k &lt;= n:</span><br><span class="line">        total, k = total + &lt;term&gt;(k), k + 1</span><br><span class="line">    return total</span><br></pre></td></tr></table></figure></p>
+<p>这种相同模板的存在是实用抽象出现的有力证据。 这些函数中的每一个都是求和术语。 作为程序的设计者，我们希望我们的语言足够强大，以便我们可以编写一个表达求和概念的函数，而不是对特定的值进行求和。在Python里，我们可以通过使用上面所示的通用模板，将“槽位”转换为形式参数：</p>
+<p>在下面的例子中，<code>summation</code>求和有两个参数，上限n以及用来计算第k次值的函数term。 我们能像使用任何函数一样使用<code>summation</code>,并简洁地表示结果。 您可以多花点时间来执行这个例子，请注意到<code>cube</code>是如何绑定到局部名称<code>term</code>上的并且如何确保<code>1 * 1 * 1 + 2 * 2 * 2 + 3 * 3 * 3 = 36</code>的计算正确的。 在此示例中，不再需要的帧会被删除以节省空间。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-33b8da949d4ab775.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">使用`identity`函数来返回其参数，我们还可以使用完全相同的`summation`求和函数来计算自然数之和。</span><br><span class="line">&gt;&gt;&gt; def summation(n, term):</span><br><span class="line">        total, k = 0, 1</span><br><span class="line">        while k &lt;= n:</span><br><span class="line">            total, k = total + term(k), k + 1</span><br><span class="line">        return total</span><br><span class="line">&gt;&gt;&gt; def identity(x):</span><br><span class="line">        return x</span><br><span class="line">&gt;&gt;&gt; def sum_naturals(n):</span><br><span class="line">        return summation(n, identity)</span><br><span class="line">&gt;&gt;&gt; sum_naturals(10)</span><br><span class="line">55</span><br></pre></td></tr></table></figure></p>
+<p><code>summation</code>求和函数也可以直接调用，而不需要为特定序列定义另一个函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; summation(10, square)</span><br><span class="line">385</span><br></pre></td></tr></table></figure></p>
+<p>我们可以使用我们的<code>summation</code>函数来抽象定义<code>pi_sum</code>函数。 我们传递参数<code>1e6</code>，这是<code>1 * 10 ^ 6 = 1000000</code>的简称，结果会慢慢收敛于<code>pi</code>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def pi_term(x):</span><br><span class="line">        return 8 / ((4*x-3) * (4*x-1))</span><br><span class="line">&gt;&gt;&gt; def pi_sum(n):</span><br><span class="line">        return summation(n, pi_term)</span><br><span class="line">&gt;&gt;&gt; pi_sum(1e6)</span><br><span class="line">3.141592153589902</span><br></pre></td></tr></table></figure></p>
+<h3 id="1-6-2-作为一般方法的函数"><a href="#1-6-2-作为一般方法的函数" class="headerlink" title="1.6.2 作为一般方法的函数"></a>1.6.2 作为一般方法的函数</h3><p>我们引入用户定义函数作为抽象机制，对数值运算进行抽象以使它们独立于特定数值。对于高阶函数，我们开始寻找一种更强大的抽象类型：一些能表达一般计算方法的函数，独立于它们调用的特定函数。</p>
+<p>函数的意义发生了扩展，我们求解调用表达式的环境模型也可以适度地扩展到高阶函数的情况。当用户定义函数调用参数时，形式参数将会在最新的局部帧中绑定实参（可能是函数）的值。</p>
+<p>思考接下来的示例，其实现了迭代改进的一般方法，并可以来计算<a href="http://www.geom.uiuc.edu/~demo5337/s97b/art.htm" target="_blank" rel="noopener">golden ratio</a> (黄金比例)。黄金比例，通常被称为<code>phi</code>，是一个与1.6近似，经常出现在自然、艺术、和建筑中的数值。</p>
+<p>迭代改进算法开始于对方程的解的<code>guess</code>（猜测值）。它重复调用<code>update</code>更新功能来改进<code>guess</code>，并调用<code>test</code>来检查当前<code>guess</code>猜测值是否“足够接近”预想的正确值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def improve(update, close, guess=1):</span><br><span class="line">        while not close(guess):</span><br><span class="line">            guess = update(guess)</span><br><span class="line">        return guess</span><br></pre></td></tr></table></figure></p>
+<p><code>improve</code>改进函数是重复细化的通用表达。 它不会具体指定要解决的问题：这些细节都留给<code>update</code>更新函数和<code>close</code>关闭函数来解决。</p>
+<p>黄金比例的众所周知的特性之一是可以通过反复叠加任何正数的倒数加上1来计算，而这个黄金比例属性是一个小于它平方的数字。 我们可以将这些属性表达为<code>improve</code>函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def golden_update(guess):</span><br><span class="line">        return 1/guess + 1</span><br><span class="line">&gt;&gt;&gt; def square_close_to_successor(guess):</span><br><span class="line">        return approx_eq(guess * guess, guess + 1)</span><br></pre></td></tr></table></figure></p>
+<p>以上，我们调用了<code>approx_eq</code>：如果它的参数大致相等，则返回True。 我们可以将两个数字差值的绝对值与一个很小的tolerance value(公差值)进行比较。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def approx_eq(x, y, tolerance=1e-15):</span><br><span class="line">        return abs(x - y) &lt; tolerance</span><br></pre></td></tr></table></figure></p>
+<p>使用<code>golden_update</code>和<code>square_close_to_successor</code>作为参数来调用<code>improve</code>，将会计算出黄金比例的近似值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; improve(golden_update, square_close_to_successor)</span><br><span class="line">1.6180339887498951</span><br></pre></td></tr></table></figure></p>
+<p>通过跟踪求值的步骤，我们可以看到结果是如何计算出来的。 首先，<code>improve</code>的局部环境被构建起来，并为<code>update</code> 、<code>test</code> 和 <code>guess</code> 这三个参数绑定值。 在<code>improve</code>的函数体中,名字<code>close</code>被绑定到<code>square_close_to_successor</code>上，用于被初始值<code>guess</code>调用。 我们继续跟踪接下来的步骤来看看计算黄金比例的具体过程。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-a7f4aa7d3f9ebddd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>这个例子显示了计算机科学中两个相关的重要概念。 首先，命名和函数使我们能够把复杂抽象为简单。 虽然每个函数定义都是不重要时，但是由求值过程触发的计算过程是相当复杂的。 第二，我们拥有了非常通用的求值过程, 小组件能组合成复杂的程序。理解这个过程便于我们验证和检查我们创建的程序。</p>
+<p>一如以往，我们新的一般函数<code>improve</code>需要一个测试来检查其正确性。 黄金比例可以提供这样的测试，因为它也有一个精确的闭式解，我们可以将它与迭代结果进行比较。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from math import sqrt</span><br><span class="line">&gt;&gt;&gt; phi = 1/2 + sqrt(5)/2</span><br><span class="line">&gt;&gt;&gt; def improve_test():</span><br><span class="line">        approx_phi = improve(golden_update, square_close_to_successor)</span><br><span class="line">        assert approx_eq(phi, approx_phi), &apos;phi differs from its approximation&apos;</span><br><span class="line">&gt;&gt;&gt; improve_test()</span><br></pre></td></tr></table></figure></p>
+<p>对于这个测试，没有反馈消息就证明是好的：在执行成功的<code>assert</code>语句之后，<code>improve_test</code>返回的是<code>None</code>。</p>
+<h3 id="1-6-3-定义函数-III-嵌套定义"><a href="#1-6-3-定义函数-III-嵌套定义" class="headerlink" title="1.6.3 定义函数 III:嵌套定义"></a>1.6.3 定义函数 III:嵌套定义</h3><p>上面的例子演示了函数作为参数传递而显著提高了编程语言的效率的能力。 每个通用概念或方程都能映射为小型函数。 这种方式的一个负面后果是，全局帧会变得混乱。 另一个问题是我们被特定函数的签名所约束：<code>improve</code>的<code>update</code>参数必须只接受一个参数。 嵌套函数的定义解决了这两个问题，但要求我们重新调整环境模型。</p>
+<p>让我们考虑一个新问题：计算一个数的平方根。 在编程语言中，“平方根”通常缩写为<code>sqrt</code>。 重复调用下面的更新操作会收敛于<code>a</code>的平方根：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def average(x, y):</span><br><span class="line">        return (x + y)/2</span><br><span class="line">&gt;&gt;&gt; def sqrt_update(x, a):</span><br><span class="line">        return average(x, a/x)</span><br></pre></td></tr></table></figure></p>
+<p>这个带有两个参数的更新函数和<code>improve</code>不兼容（它需要接受两个参数，而不是一个参数）。我们实际上只关心最后的平方根。这些问题的解决方案是把函数放到其他定义的函数体中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def sqrt(a):</span><br><span class="line">        def sqrt_update(x):</span><br><span class="line">            return average(x, a/x)</span><br><span class="line">        def sqrt_close(x):</span><br><span class="line">            return approx_eq(x * x, a)</span><br><span class="line">        return improve(sqrt_update, sqrt_close)</span><br></pre></td></tr></table></figure></p>
+<p>像局部赋值一样，局部的<code>def</code>语句仅影响当前的局部帧。这些函数仅仅当<code>sqrt</code>求值时在作用域内。和求值过程一致, 局部的<code>def</code>语句在<code>sqrt</code>调用之前并不会求值。</p>
+<p><strong>词法作用域。</strong>局部定义的函数可以访问定义作用域中的名称绑定。在此示例中，<code>sqrt_update</code>引用名称<code>a</code>，它是外层函数<code>sqrt</code>的形式参数。这种在嵌套函数中共享名称的规则称为词法作用域。最重要的是，内部函数可以访问它们被定义的环境中的名称（而不是它们被调用的位置）。</p>
+<p>我们需要对我们的环境模型进行两个扩展，以实现词法作用域。</p>
+<p>1.每个用户定义的函数都有父环境：它的定义所在的环境。<br>2.当用户定义的函数被调用时，其局部帧扩展于其父环境。<br>在<code>sqrt</code>之前，所有函数都是在全局环境中定义的，所以它们都关联到全局环境。相比之下，当Python运行<code>sqrt</code>的前两个子句时，它创建了与本地环境相关联的函数。在<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; sqrt(256)</span><br><span class="line">16.0</span><br></pre></td></tr></table></figure></p>
+<p>的调用中，环境首先为<code>sqrt</code>添加一个局部帧，并为<code>sqrt_update</code>和<code>sqrt_close</code>的<code>def</code>语句求值。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-cdf239ae03cc9c82.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>函数值每个都有一个新的注释，我们将在现在的环境图中包含一个父级。 函数值的父项是定义该函数的环境的第一个框架。 没有父注释的功能是在全球环境中定义的。 当调用用户定义的函数时，创建的框具有与该功能相同的父级。</p>
+<p>随后，<code>sqrt_update</code>的名称解析到新定义的函数上，该函数是向<code>improve</code>传入的参数。 在<code>improve</code>的函数体中，我们必须以初始值 1 调用<code>update</code>函数（绑定到<code>sqrt_update</code>）。最后这个调用创建一个<code>sqrt_update</code>的环境，该环境一开始仅包含<code>x</code>的局部帧，但是之前的<code>sqrt</code>帧仍然包含一个<code>a</code>的绑定。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-40c77b83965eef67.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>此求值过程最关键的部分是将<code>sqrt_update</code>的父级传输到通过调用<code>sqrt_update</code>创建的帧。这个帧也用<code>[parent = f1]</code>注释。</p>
+<p><strong>扩展环境</strong>。环境可以由任意多的帧组成，总是以全局框架结束。在此<code>sqrt</code>示例之前，环境最多有两帧：局部帧和全局帧。通过调用在其他函数中定义的函数，通过嵌套的<code>def</code>语句，我们可以创建更多的帧。对<code>sqrt_update</code>调用的环境由三个帧组成：局部帧<code>sqrt_update</code>，定义<code>sqrt_update</code>的<code>sqrt</code>帧（标记为<code>f1</code>）和全局帧。</p>
+<p><code>sqrt_update</code>函数体中的返回表达式可以通过跟随这一系列帧来解析值。我们可以通过查找在当前环境的名称找到绑定到该名称的第一个值。 Python首先在<code>sqrt_update</code>帧中检查 – 不存在。接下来，Python检查父帧中<code>f1</code>，并找到<code>a</code>绑定到256。</p>
+<p>因此，我们意识到了Python中词法作用域的两个主要优点。</p>
+<ol>
+<li>局部函数的名称不会影响到定义函数外部的名称，因为局部函数名称将绑定到了定义处的当前局部环境中,而不是全局环境中。</li>
+<li>局部函数可以访问外层函数的环境，这是因为局部函数的函数体的求值环境扩展于定义处的求值环境。</li>
+</ol>
+<p><code>sqrt_update</code>函数自带有一些数据：在定义它的环境中引用的值。因为它以这种方式“封装”信息，所以局部定义的函数通常被称为<strong>闭包</strong>。</p>
+<h3 id="1-6-4-作为返回值的函数"><a href="#1-6-4-作为返回值的函数" class="headerlink" title="1.6.4 作为返回值的函数"></a>1.6.4 作为返回值的函数</h3><p>我们可以通过创建返回值本身是函数的函数提高效率。 带有词法作用域的编程语言的一个重要特性就是，局部定义函数在它们返回时仍旧持有所关联的环境。 以下示例展示了这一特性。</p>
+<p>在定义了许多简单函数之后，<code>composition</code>函数就是包含在我们的编程语言中的自然组合方法。 也就是说，给定两个函数<code>f(x)</code>和<code>g(x)</code>，我们可能想要定义h(x)= f(g(x))。 我们可以使用我们现有的工具来定义复合函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def compose1(f, g):</span><br><span class="line">        def h(x):</span><br><span class="line">            return f(g(x))</span><br><span class="line">        return h</span><br></pre></td></tr></table></figure></p>
+<p>此示例的环境图显示了<code>f</code>和<code>g</code>是如何正确解析的，即使它们存在冲突的名称。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-cec55f795a248c94.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><code>compose1</code>中的<code>1</code>意味着复合函数只采用单个参数。 该命名惯例不由解释器强制执行; <code>1</code>只是函数名称的一部分。</p>
+<p>在这里，我们开始观察我们努力在计算的复杂模型中投入的回报。我们的环境模型不需要任何修改就能支持以这种方式返回函数的能力。</p>
+<h3 id="1-6-5-例子-牛顿法"><a href="#1-6-5-例子-牛顿法" class="headerlink" title="1.6.5 例子:牛顿法"></a>1.6.5 例子:牛顿法</h3><p>这个扩展示例显示了函数返回值和局部定义如何一起工作来简明扼要地表达通常概念。我们将实现一种能广泛应用于机器学习，科学计算，硬件设计和优化的算法。</p>
+<p>牛顿法是一种经典的迭代方法，用于查找使数学函数返回值为零的参数。这些值称为函数的根。找到一个函数的根通常等价于解决一些有意思的问题，例如计算平方根。</p>
+<p>开始前的激励：您当然知道该如何计算平方根。不只是Python，您的手机，网络浏览器或计算器都可以为您做到这一点。然而，学习计算机科学的一部分是弄懂这些数如何计算,而且,这里展示的通用方法可以用于求解 大量方程,而不仅仅是内建于 Python 的东西。</p>
+<p>牛顿的方法是一种迭代改进算法：它可以改进任何可导函数的根的推测值，这意味着它可以在任何点被直线逼近。牛顿的方法遵循这些线性近似来找到函数根。</p>
+<p>想象经过点 (x, f(x)) 的一条直线,它与函数 f(x) 的曲线在这一点的斜率相同。这样的直线叫做<code>tangent</code>切线,它的斜率叫做 f 在 x 上的<code>derivative</code>导数。</p>
+<p>这条直线的斜率是函数值改变量与函数参数改变量的比值。所以,按照 f(x) 除以这个斜率来 平移 x ,就会得到切线到达 0 时的 x 值。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-cf3a04953cf6d748.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>函数<code>newton_update</code>表达了跟随这条切线到零的计算过程。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def newton_update(f, df):</span><br><span class="line">        def update(x):</span><br><span class="line">            return x - f(x) / df(x)</span><br><span class="line">        return update</span><br></pre></td></tr></table></figure></p>
+<p>最后，我们可以定义基于<code>newton_update</code>（我们的迭代改进算法）的<code>find_root</code>函数和比较测试以查看f(x)是否接近0。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def find_zero(f, df):</span><br><span class="line">        def near_zero(x):</span><br><span class="line">            return approx_eq(f(x), 0)</span><br><span class="line">        return improve(newton_update(f, df), near_zero)</span><br></pre></td></tr></table></figure></p>
+<p><strong>计算根</strong>.使用牛顿法，我们可以计算任意度n的根。 a的n次方根为x，使得x·x·x … x = a，其中x重复n次。 例如，</p>
+<ol>
+<li>64的平方根为8，因为8·8 = 64。</li>
+<li>64的立方根为4，因为4·4·4 = 64。</li>
+<li><p>64的六次方根是2，因为2⋅2⋅2⋅2⋅2⋅2= 64。</p>
+<p>通过绘制n等于2, 3和6以及a等于64的曲线，我们可以看出以下关系。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-efbd2d3f45475738.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>我们首先通过定义<code>f</code>及其导数<code>df</code>来实现<code>square_root</code>。 我们从微积分中知道f(x) = x^2 - a的导数是线性函数df(x) = 2*x。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square_root_newton(a):</span><br><span class="line">        def f(x):</span><br><span class="line">            return x * x- a</span><br><span class="line">        def df(x):</span><br><span class="line">            return 2 * x</span><br><span class="line">        return find_zero(f, df)</span><br><span class="line">&gt;&gt;&gt; square_root_newton(64)</span><br><span class="line">8.0</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>以下是n次方根的情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def power(x, n):</span><br><span class="line">        &quot;&quot;&quot;Return x * x * x * ... * x for x repeated n times.&quot;&quot;&quot;</span><br><span class="line">        product, k = 1, 0</span><br><span class="line">        while k &lt; n:</span><br><span class="line">            product, k = product * x, k + 1</span><br><span class="line">        return product</span><br><span class="line">&gt;&gt;&gt; def nth_root_of_a(n, a):</span><br><span class="line">        def f(x):</span><br><span class="line">            return power(x, n) - a</span><br><span class="line">        def df(x):</span><br><span class="line">            return n * power(x, n-1)</span><br><span class="line">        return find_zero(f, df)</span><br><span class="line">&gt;&gt;&gt; nth_root_of_a(2, 64)</span><br><span class="line">8.0</span><br><span class="line">&gt;&gt;&gt; nth_root_of_a(3, 64)</span><br><span class="line">4.0</span><br><span class="line">&gt;&gt;&gt; nth_root_of_a(6, 64)</span><br><span class="line">2.0</span><br></pre></td></tr></table></figure></p>
+<p>所有这些计算中的近似误差可以通过减少<code>approx_eq</code>的<code>tolerance</code>而降低。</p>
+<p>当您尝试使用牛顿法时，请注意它不总是收敛的。<code>improve</code>的初始猜测值必须足够接近根，并且必须满足函数的各种条件。 尽管有这个缺点，牛顿法是一个能解决微分方程的强大的通用计算方法。 在现代计算机中，非常快速的对数算法和大整数除法也使用了该技巧的变体。</p>
+<h3 id="1-6-6-函数柯里化"><a href="#1-6-6-函数柯里化" class="headerlink" title="1.6.6 函数柯里化"></a>1.6.6 函数柯里化</h3><p>我们可以使用高阶函数将一个接受多参数的函数转换成接受一个单一参数（最初函数的第一个参数）的函数。 具体地说，给定函数f(x，y)，我们可以定义函数g，使得g(x)(y)等价于f(x，y)。 这里，g是一个高阶函数，它接受单个参数x，并返回另一个接受单个参数y的函数。 这种转变叫做<code>currying</code>函数柯里化。<br>例如，我们可以定义一个<code>pow</code>函数的柯里化版本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def curried_pow(x):</span><br><span class="line">        def h(y):</span><br><span class="line">            return pow(x, y)</span><br><span class="line">        return h</span><br><span class="line">&gt;&gt;&gt; curried_pow(2)(3)</span><br><span class="line">8</span><br></pre></td></tr></table></figure></p>
+<p>一些编程语言（如Haskell）只允许函数接受单个参数的，因此程序员必须对所有多参数程序进行<code>currying</code>柯里化。 在更通用的语言（如Python）中，当我们需要只接受一个参数的函数时，currying很有用。 例如，<code>map</code>模式将单参数函数应用于一系列值。 在随后的章节中，我们将看到更多的<code>map</code>模式的例子。至于现在，我们可以在一个函数中实现这个模式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def map_to_range(start, end, f):</span><br><span class="line">        while start &lt; end:</span><br><span class="line">            print(f(start))</span><br><span class="line">            start = start + 1</span><br></pre></td></tr></table></figure></p>
+<p>我们可以使用<code>map_to_range</code>和<code>curried_pow</code>来计算2的前10个幂，而不是专门写一个函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; map_to_range(0, 10, curried_pow(2))</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">4</span><br><span class="line">8</span><br><span class="line">16</span><br><span class="line">32</span><br><span class="line">64</span><br><span class="line">128</span><br><span class="line">256</span><br><span class="line">512</span><br></pre></td></tr></table></figure></p>
+<p>我们可以类似地使用相同的两个函数来计算其他数字的幂函数。 <code>currying</code>可以让我们做到，它不需要为我们希望计算的幂的每一个数写一个特定的函数。</p>
+<p>在上面的例子中，我们手动对<code>pow</code>函数进行<code>currying</code>转换，得到<code>curried_pow</code>。 相反，我们可以定义自动化currying的函数，以及反向currying的转换：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def curry2(f):</span><br><span class="line">        &quot;&quot;&quot;Return a curried version of the given two-argument function.&quot;&quot;&quot;</span><br><span class="line">        def g(x):</span><br><span class="line">            def h(y):</span><br><span class="line">                return f(x, y)</span><br><span class="line">            return h</span><br><span class="line">        return g</span><br><span class="line">&gt;&gt;&gt; def uncurry2(g):</span><br><span class="line">        &quot;&quot;&quot;Return a two-argument version of the given curried function.&quot;&quot;&quot;</span><br><span class="line">        def f(x, y):</span><br><span class="line">            return g(x)(y)</span><br><span class="line">        return f</span><br><span class="line">&gt;&gt;&gt; pow_curried = curry2(pow)</span><br><span class="line">&gt;&gt;&gt; pow_curried(2)(5)</span><br><span class="line">32</span><br><span class="line">&gt;&gt;&gt; map_to_range(0, 10, pow_curried(2))</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">4</span><br><span class="line">8</span><br><span class="line">16</span><br><span class="line">32</span><br><span class="line">64</span><br><span class="line">128</span><br><span class="line">256</span><br><span class="line">512</span><br></pre></td></tr></table></figure></p>
+<p><code>curry2</code>函数使用了双参数函数<code>f</code>，并返回单参数函数<code>g</code>。 当<code>g</code>接受参数<code>x</code>时，它返回一个单参数函数<code>h</code>。 当<code>h</code>接受参数<code>y</code>时，它调用了<code>f(x，y)</code>。 因此，<code>curry2(f)(x)(y)</code>等价于<code>f(x，y)</code>。 <code>uncurry2</code>函数反转<code>currying</code>变换，使得<code>uncurry2(curry2(f))</code>等效于<code>f</code>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; uncurry2(pow_curried)(2, 5)</span><br><span class="line">32</span><br></pre></td></tr></table></figure></p>
+<h3 id="1-6-7-Lambda-表达式"><a href="#1-6-7-Lambda-表达式" class="headerlink" title="1.6.7 Lambda 表达式"></a>1.6.7 Lambda 表达式</h3><p>到目前为止，每当我们想要定义新的函数时，我们都需要给它一个名字。 但是对于其他类型的表达式，我们不需要将中间值关联到名称上。 也就是说，我们可以计算<code>a * b + c * d</code>，而不用命名子表达式<code>a * b</code>或<code>c * d</code>。 在Python中，我们可以使用<code>lambda</code>表达式创建函数，该表达式会求值为匿名函数。 <code>lambda</code>表达式是函数体具有单个返回表达式的函数,不允许出现赋值和控制语句。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def compose1(f, g):</span><br><span class="line">        return lambda x: f(g(x))</span><br></pre></td></tr></table></figure></p>
+<p>我们可以通过构建相应的英文句子来理解lambda表达式的结构：<br><img src="http://upload-images.jianshu.io/upload_images/5899832-97404300ccc0f1b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>lambda表达式的结果称为lambda函数。 它没有内在名称（因此Python为该名称打印<lambda>），但它的行为就像任何其他函数一样。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; s = lambda x: x * x</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&lt;function &lt;lambda&gt; at 0xf3f490&gt;</span><br><span class="line">&gt;&gt;&gt; s(12)</span><br><span class="line">144</span><br></pre></td></tr></table></figure></lambda></p>
+<p>在环境图示中，lambda表达式的结果也是用希腊字母λ（lambda）命名的函数。 我们的示例可以用lambda表达式表达得相当简洁紧凑。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-cfc2330cfcc70731.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>一些程序员发现使用lambda表达式的匿名函数更简短直接。 但是复合的lambda表达式是非常难以辨认的，尽管它们很简洁。 以下定义是正确的，但很多程序员很难理解它。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; compose1 = lambda f,g: lambda x: f(g(x))</span><br></pre></td></tr></table></figure></p>
+<p>一般来说，Python代码风格倾向于显式的<code>def</code>语句而不是 Lambda 表达式，但是允许它们在简单函数作为参数或返回值的情况下使用。</p>
+<p>这样的风格规则只是指导; 你可以按你想要的方式进行编程。 但是,在你编写程序时,要考虑某一天可能会阅读你的程序的人们。如果你可以让你的程序更易于理解,你就帮了人们一个忙。<br>术语lambda是一个历史的偶然结果, 来源于手写的数学符号和早期打字系统限制的不兼容。</p>
+<blockquote>
+<p>It may seem perverse to use lambda to introduce a procedure/function. The notation goes back to Alonzo Church, who in the 1930’s started with a “hat” symbol; he wrote the square function as “ŷ . y × y”. But frustrated typographers moved the hat to the left of the parameter and changed it to a capital lambda: “Λy . y × y”; from there the capital lambda was changed to lowercase, and now we see “λy . y × y” in math books and (lambda (y) (* y y)) in Lisp.</p>
+<pre><code>—Peter Norvig (norvig.com/lispy2.html)
+</code></pre></blockquote>
+<p>尽管它们具有不寻常的词源，lambda表达式和函数调用相应形式的语言，以及lambda演算都成为了计算机科学概念的基础,并在 Python编程社区广泛传播。 当我们在第3章研究解释器的设计时，我们将重新讨论这个话题。</p>
+<h3 id="1-6-8-抽象和一等函数"><a href="#1-6-8-抽象和一等函数" class="headerlink" title="1.6.8 抽象和一等函数"></a>1.6.8 抽象和一等函数</h3><p>用户定义函数是一个关键的抽象机制，因为它们允许我们将计算的通用方法表达为编程语言中的显式元素。现在我们已经看到了高阶函数如何让我们操纵这些通用方法来创建进一步的抽象。</p>
+<p>作为程序员，我们应该留意程序中的低级抽象，在它们之上构架并将其概括为更强大的抽象。这不是说应该总以最抽象的方式编写程序; 专家程序员知道如何选择适合他们任务的抽象级别。但是，重要的是能够从这些抽象的角度思考，以便我们可以在新的环境中应用它们。高阶函数的意义，在于它们使我们能够将这些抽象明确地表示为编程元素，以便像处理其他计算元素那样处理它们。</p>
+<p>通常，编程语言会对计算元素被操纵的方式施加限制。具有最少限制的要素具有一等的地位。一等元素的一些“权利和特权”是：</p>
+<ol>
+<li>它们可以被绑定到名字。</li>
+<li>它们可以作为参数传递给函数。</li>
+<li>它们可以作为函数的返回值返回。</li>
+<li>它们可以被包括在数据结构中。</li>
+</ol>
+<p>Python 总是给予函数一等地位, 所产生的表现力的收益是巨大的。</p>
+<h3 id="1-6-9-函数装饰器"><a href="#1-6-9-函数装饰器" class="headerlink" title="1.6.9 函数装饰器"></a>1.6.9 函数装饰器</h3><p>Python提供了特殊的语法, 将高阶函数用作执行<code>def</code>语句的一部分,叫做装饰器。 也许最常见的例子是<code>trace</code>跟踪。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def trace(fn):</span><br><span class="line">        def wrapped(x):</span><br><span class="line">            print(&apos;-&gt; &apos;, fn, &apos;(&apos;, x, &apos;)&apos;)</span><br><span class="line">            return fn(x)</span><br><span class="line">        return wrapped</span><br><span class="line">&gt;&gt;&gt; @trace</span><br><span class="line">    def triple(x):</span><br><span class="line">        return 3 * x</span><br><span class="line">&gt;&gt;&gt; triple(12)</span><br><span class="line">-&gt;  &lt;function triple at 0x102a39848&gt; ( 12 )</span><br><span class="line">36</span><br></pre></td></tr></table></figure></p>
+<p>在这个例子中，定义了一个高阶函数<code>trace</code>跟踪，它返回一个函数，该函数在调用它的参数之前执行<code>print</code>语句来输出参数。<code>triple</code>的<code>def</code>语句有一个注释，<code>@trace</code>，它影响了<code>def</code>的执行规则。 像往常一样，函数<code>triple</code>被创建。 但是，<code>triple</code>名称没有绑定在此函数上。 相反，<code>triple</code>名称绑定到新定义的<code>triple</code>上的调用<code>trace</code>的返回函数值上。 在代码中，这个装饰器相当于：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def triple(x):</span><br><span class="line">        return 3 * x</span><br><span class="line">&gt;&gt;&gt; triple = trace(triple)</span><br></pre></td></tr></table></figure></p>
+<p>在与此文本相关的项目中，装饰器用于跟踪，以及选择在命令行运行程序时要调用哪些函数。</p>
+<p><strong>附加部分</strong>。 装饰器符号<code>@</code>后可以跟随一个调用表达式。 首先求解<code>@</code>之后的表达式，然后是<code>def</code>语句，最后求解出的装饰器表达式的结果被应用于新定义的函数，结果绑定到<code>def</code>声明的名称上。 如果您感兴趣的话，可以阅读Ariel Ortiz编写的<a href="http://programmingbits.pythonblogs.com/27_programmingbits/archive/50_function_decorators.html" target="_blank" rel="noopener">装饰器简短教程</a>。</p>
+<p>下一节：<a href="http://www.jianshu.com/p/69081ac061d9" target="_blank" rel="noopener">SICP 第一章 使用函数抽象概念 1.7 递归函数</a></p>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/20/post1-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -320,7 +1204,71 @@
       
         
           
-            
+            <blockquote>
+<p>文档：<a href="http://composingprograms.com/pages/13-defining-new-functions.html" target="_blank" rel="noopener">1.3 Defining New Functions</a><br>参考：<a href="https://cs61a.org/" target="_blank" rel="noopener">cs61a.org/spring2017</a></p>
+</blockquote>
+<hr>
+<p>我们已经在Python中确定了一些在任何强大的编程语言中都有的元素：</p>
+<p>1.数字和算术运算是基本的内置数据值和函数。<br>2.嵌套函数提供了组合操作的方法。<br>3.将名称绑定到值的方式提供了有限的抽象方法。</p>
+<p>现在我们将了解函数定义，一个更强大的抽象技术，通过该技术可以将名称绑定到复合操作上，然后将其作为单元引用。</p>
+<p>我们首先研究如何表达<code>square</code>平方的这个概念。 我们可能会说：“对数求平方就是将数自己乘上自己。”在Python中的表达如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square(x):</span><br><span class="line">        return mul(x, x)</span><br></pre></td></tr></table></figure></p>
+<p>它定义了一个赋予了名称<code>square</code>的新函数。 这个用户定义的函数并没有内置到解释器中。 它代表着自己和自己相乘的复合操作。 这个定义中的<code>x</code>称为形式参数，它为被乘的东西提供一个名称。 该定义创建了此用户定义的函数，并将其与名称<code>square</code>相关联。</p>
+<p><strong>如何定义一个函数。</strong> 函数定义包含一个<code>def</code>语句，该语句包含了<code>&lt;name&gt;</code>和一个带有名字的<code>&lt;formal parameter&gt;</code>（形式参数），然后是一个称为函数体的<code>return</code>返回语句，该语句指定了函数的<return expression="">（返回表达式），这是一个每次函数调用都需要求值的表达式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">def &lt;name&gt;(&lt;formal parameters&gt;):</span><br><span class="line">    return &lt;return expression&gt;</span><br></pre></td></tr></table></figure></return></p>
+<p>第二行必须缩进 - 按照惯例大多数程序员使用四个空格来缩进。 返回表达式不会立即求值; 它被存储为新定义函数的一部分，并且仅在函数最终被调用时被求解。</p>
+<p>定义了<code>square</code>后，我们可以用表达式来调用它：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; square(21)</span><br><span class="line">441</span><br><span class="line">&gt;&gt;&gt; square(add(2, 5))</span><br><span class="line">49</span><br><span class="line">&gt;&gt;&gt; square(square(3))</span><br><span class="line">81</span><br></pre></td></tr></table></figure></p>
+<p>我们还可以使用<code>square</code>作为构建块来定义其他功能。 例如，我们可以轻松定义一个函数<code>sum_squares</code>，给定任何两个数字作为参数，返回它们的平方之和：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def sum_squares(x, y):</span><br><span class="line">        return add(square(x), square(y))</span><br><span class="line">&gt;&gt;&gt; sum_squares(3, 4)</span><br><span class="line">25</span><br></pre></td></tr></table></figure></p>
+<p>用户定义的函数的使用方式与内置函数完全相同。 实际上，从sum_squares的例子我们可以发现，我们根本无法分辨<code>square</code>是内置在解释器中，是从模块导入的还是由用户定义得。</p>
+<p>def语句和赋值语句都是将名称绑定到值，并且任何现有的绑定都将丢失。 例如，下文的<code>g</code>首先指的是没有参数的函数，然后是一个数字，再然后是有两个参数的另一个函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def g():</span><br><span class="line">        return 1</span><br><span class="line">&gt;&gt;&gt; g()</span><br><span class="line">1</span><br><span class="line">&gt;&gt;&gt; g = 2</span><br><span class="line">&gt;&gt;&gt; g</span><br><span class="line">2</span><br><span class="line">&gt;&gt;&gt; def g(h, i):</span><br><span class="line">        return h + i</span><br><span class="line">&gt;&gt;&gt; g(1, 2)</span><br><span class="line">3</span><br></pre></td></tr></table></figure></p>
+<h3 id="1-3-1-环境"><a href="#1-3-1-环境" class="headerlink" title="1.3.1 环境"></a>1.3.1 环境</h3><p>我们的Python子集现在已经足够复杂，但程序的含义还不是很明显。 如果形式参数与内建函数具有相同的名称怎么办呢？ 两个函数可以共享名称吗？ 要解决这些问题，我们必须更详细地描述环境。</p>
+<p>表达式求值的环境由<code>frame</code>帧的序列组成，它们可以被描述为一些盒子。 每个<code>frame</code>都包含绑定，它们将名称与其对应的值相关联。<code>global frame</code>全局帧只有一个。 赋值和导入语句将条目添加到当前环境的第一帧中。 到目前为止，我们的环境只包括全局帧。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;	from math import pi</span><br><span class="line">&gt;&gt;&gt;	tau = 2 * pi</span><br></pre></td></tr></table></figure></p>
+<p>环境图示可以显示出当前环境的绑定，以及它们绑定的值。  您可以点击<a href="http://composingprograms.com/tutor.html" target="_blank" rel="noopener">Online Python Tutor</a>链接，将示例加载到<a href="http://composingprograms.com/tutor.html" target="_blank" rel="noopener">Online Python Tutor</a>，这是由<code>Philip Guo</code>创建的用于生成这些环境图的工具。 </p>
+<p>函数也出现在环境图中。 <code>import</code>导入语句将名称绑定到内置函数。 def语句将名称绑定到由用户定义函数。 导入<code>mul</code>和定义<code>square</code>后的环境如下：<br><img src="http://upload-images.jianshu.io/upload_images/5899832-3bdad0f5d4146223.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>每个函数都是以<code>func</code>开头的行，后跟函数名和形式参数。 内建函数（如<code>mul</code>）没有形式参数名称，因此总是使用。</p>
+<p>函数的名称重复两次，一次在帧中，并再次作为函数本身的一部分。 函数中出现的名称称为<code>intrinsic</code>内在名称。 帧中的名称是绑定名称。 两者之间有区别：不同的名称可能指的是相同的函数，但该函数本身只有一个内在名称。</p>
+<p>绑定到帧中的函数的名称将会在求值过程中使用。 函数的内在名称在求值中不起作用。 通过下面的示例，一旦名称<code>max</code>被绑定到值3，它将不能再被用作为一个函数。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-c474bba74db91e16.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>错误消息<code>TypeError</code>：<code>&#39;int&#39; object is not callable</code>(‘int’对象不可调用)显示名称<code>max</code>（当前绑定到数字3）是一个整型而不是一个函数。 因此，它不能被用作调用表达式中的运算符。</p>
+<p><strong>函数签名</strong>。 函数因参数的数量不同。 用户定义的函数<code>square</code>只有一个参数<code>x</code>; 提供更多或更少的参数将导致错误。 对函数的形式参数的描述被称为函数的签名。</p>
+<p>函数<code>max</code>可以有任意数量的参数。 它被渲染为<code>max(...)</code>。 不管有多少个参数，所有内置函数将被呈现为<name>（…）。</name></p>
+<h3 id="1-3-2-调用用户定义的函数"><a href="#1-3-2-调用用户定义的函数" class="headerlink" title="1.3.2  调用用户定义的函数"></a>1.3.2  调用用户定义的函数</h3><p>为了求出其操作符为用户定义函数的调用表达式，Python解释器遵循了以下计算过程。与任何调用表达式一样，解释器将对运算符和操作数表达式求值，然后将具名函数应用于生成的实参。</p>
+<p>调用用户定义的函数会引入第二个局部帧，它只能访问该函数。为了对一些实参调用用户定义的函数：</p>
+<p>1.在新的局部帧中，将实参绑定到的函数的形式参数上。<br>2.在以此帧开头的环境中求出函数体。</p>
+<p>函数体求值的环境由两个帧组成：首先是包含形式参数绑定的局部帧，然后是包含其他所有内容的全局帧。函数的每个实例都有自己的独立局部帧。</p>
+<p>为了详细说明一个例子，下面描述了相同示例的环境图的几个步骤。执行第一个<code>import</code>语句后，只有名称<code>mul</code>被绑定在全局帧中。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-7652717c3fd34aba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>首先，执行函数<code>square</code>的定义语句。 请注意，整个<code>def</code>语句在一个步骤中执行。 直到调用函数才执行函数体（不是在定义的时候）。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-ce4a00c677346674.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>接下来，使用参数-2调用<code>square</code>函数，因此创建了一个新的帧，形式参数<code>x</code>绑定到值<code>-2</code>上。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-f900652ce7135037.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>然后，在当前环境中查找名称<code>x</code>，它由所示的两个帧组成。 在这两种情况下，<code>x</code>为-2，因此<code>square</code>函数返回4。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-42c5afeda2668fda.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><code>square()</code>的帧中的“return value”不是名称绑定;而是指由创建该帧的函数调用所返回的值。</p>
+<p>即使在这个简单的例子中，也会使用两种不同的环境。 我们在全局环境中计算最上方表达式<code>square(-2)</code>，在通过调用<code>square</code>创建的环境中计算返回表达式<code>mul(x，x)</code>。<code>x</code>和<code>mul</code>都绑定在这个环境中，但是在不同的帧中。</p>
+<p>环境中的帧顺序会影响由表达式中名称检索而返回的值。 我们之前说过，名称求解为与当前环境中的该名称相关联的值。 我们现在可以更准确地说：</p>
+<p>我们关于环境，名称和函数的概念建立了求值模型; 虽然一些机械细节仍然未敲定（例如如何实现绑定），但我们的模型能准确而正确地描述解释器如何求解调用表达式。 在第三章中，我们将看到这个模型如何作为蓝图来实现编程语言的工作解释器。</p>
+<h3 id="1-3-3-示例-调用用户定义的函数"><a href="#1-3-3-示例-调用用户定义的函数" class="headerlink" title="1.3.3 示例:调用用户定义的函数"></a>1.3.3 示例:调用用户定义的函数</h3><p>让我们再次考虑两个简单的函数定义，并说明用户定义函数的调用表达式的求解过程。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-4644b6b7d5e811e2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>Python首先求出名称<code>sum_squares</code>，它绑定到了全局帧中的用户定义的函数。 基本的数字表达式5和12求值为它们表达的数值。</p>
+<p>接下来，Python调用了<code>sum_squares</code>，它引入了将<code>x</code>绑定到5和<code>y</code>绑定到12的局部帧。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/5899832-c8e00ef9ad56c76c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><code>sum_squares</code>的函数体包含以下调用表达式：<br><img src="http://upload-images.jianshu.io/upload_images/5899832-2f4b9300ee0f4181.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>所有的三个子表达式在当前环境中进行求解，它开头于标记为<code>sum_squares()</code>的帧。 运算符子表达式<code>add</code>是在全局帧中找到的名称，它绑定到内建的加法函数中。 在调用加法函数之前，两个操作数子表达式必须依次求值。 在当前以标记为<code>sum_squares</code>的帧的环境中，对两个操作数进行求值。</p>
+<p>在<code>operand 0</code>中，<code>square</code>命名了全局帧中的用户定义的函数，而<code>x</code>则命名为局部帧的数字5。 Python通过引入另一个将<code>x</code>绑定到5的局部帧来应用<code>square</code> 到5。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-3794147b35472872.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>在这种环境下，表达式mul(x，x)计算为25。</p>
+<p>我们的求值过程现在轮到<code>operand 1</code>，其中<code>y</code>的值为12. Python会再次对<code>square</code>的函数体进行求解，此时引入另一个将<code>x</code>绑定到12的局部帧。因此，<code>operand 1</code>求值为144。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-7834ca82d701cf5b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>最后，对参数25和144调用加法得到<code>sum_squares</code>的最终返回值：169。<br><img src="http://upload-images.jianshu.io/upload_images/5899832-7ba2793ca93bf7da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>这个例子说明了迄今为止我们发展出来的许多基本概念。 名称绑定到值，这些值分布在许多独立的局部帧，以及包含共享名称的单个全局帧中。 每次调用一个函数时都会引入一个新的局部帧，即使是同一个函数被调用两次的情况。</p>
+<p>所有这些机制的存在，都是为了在程序执行期间确保在正确的时间将名称解析为正确的值。 这个例子说明了为什么我们的模型需要引入的复杂性。 所有三个局部帧都包含<code>x</code>的绑定，但该名称绑定到不同的帧中的不同值上。 局部帧分离了这些名称。</p>
+<h3 id="1-3-4-局部名称"><a href="#1-3-4-局部名称" class="headerlink" title="1.3.4 局部名称"></a>1.3.4 局部名称</h3><p>函数实现的一个细节是实现者对函数的形式参数的名称的选择不应影响函数行为。 因此，以下函数应提供相同的行为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square(x):</span><br><span class="line">        return mul(x, x)</span><br><span class="line">&gt;&gt;&gt; def square(y):</span><br><span class="line">        return mul(y, y)</span><br></pre></td></tr></table></figure></p>
+<p>这个原则 – 函数应该与其编写者选择的参数名称无关 –对编程语言有重要的意义。 最简单的是函数的参数名称必须保留在函数体的局部范围内。</p>
+<p>如果参数不是它们各自函数主体的局部参数，那么在<code>square</code>中的参数<code>x</code>可能与<code>sum_squares</code>中的参数<code>x</code>混淆。 严格来说，这并不是问题所在：在不同的局部帧中的<code>x</code>绑定是不相关的。 我们的计算模型经过严谨的设计，以确保这种独立性。</p>
+<p>局部名称的作用范围仅限于定义它的用户定义函数体中。 当一个名称不能再被访问时，它就离开了作用域。 这种作用域范围界定行为不是我们模型的新事实; 这是环境的工作方式的结果。</p>
+<h3 id="1-3-5-选择名称"><a href="#1-3-5-选择名称" class="headerlink" title="1.3.5 选择名称"></a>1.3.5 选择名称</h3><p>名称的可修改性并不意味着形式参数名称不重要。相反，精心选择的函数和参数名称对于程序的可解释性至关重要！</p>
+<p>以下指导原则来自于<a href="https://www.python.org/dev/peps/pep-0008/" target="_blank" rel="noopener">Python代码的样式指南</a>，它可以作为所有（非反叛）Python程序员的指南。这些共享的约定使开发者社区的成员之间的沟通能够顺利进行。遵循这些约定有一些副作用，您将发现您的代码在内部变得一致。</p>
+<p>1.函数名称应该小写，用下划线分隔。提倡描述性名称。<br>2.函数名称通常反映解释器应用于参数的操作（例如，<code>print</code>,<code>add</code>,<code>square</code>）或结果（例如，<code>max</code>，<code>abs</code>，<code>sum</code>）。<br>3.参数名称应该小写，单词用下划线分隔。单字名称是首选。<br>4.参数名称应该反映参数在函数中的作用。<br>5.当作用明确时，单字参数名称可以接受，但避免使用<code>l</code>（小写的<code>L</code>）和<code>O</code>（大写的<code>o</code>）,或<code>I</code>（大写的<code>i</code>）以避免与数字混淆。</p>
+<p>这些指南也有许多例外，即使在Python标准库中也是如此。像英语的词汇一样，Python继承了各种贡献者的词汇，而结果并不总是一致的。</p>
+<h3 id="1-3-6-作为抽象的函数"><a href="#1-3-6-作为抽象的函数" class="headerlink" title="1.3.6 作为抽象的函数"></a>1.3.6 作为抽象的函数</h3><p>尽管函数<code>sum_squares</code>很简单，但它可以说明用户定义函数最强大的属性。 函数<code>sum_squares</code>是根据函数<code>square</code>定义的，但仅依赖于<code>square</code>的输入参数与其输出值之间的关系。</p>
+<p>我们可以编写<code>sum_squares</code>，而不用考虑自己如何计算平方数。 平方数计算的细节被隐藏了，可以以后考虑。 事实上，就<code>sum_squares</code>而言，<code>square</code>并不是一个特定的函数体，而是某个函数的抽象。 在这个抽象层次上，任何能计算平方数的函数都是等价的。</p>
+<p>因此，在只考虑返回值的情况下，以下两个计算平方数的函数是难以区分的：它们都是接受数值参数并返回该数的平方值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square(x):</span><br><span class="line">        return mul(x, x)</span><br><span class="line">&gt;&gt;&gt; def square(x):</span><br><span class="line">        return mul(x, x-1) + x</span><br></pre></td></tr></table></figure></p>
+<p>换句话说，函数定义能够隐藏细节。函数的用户可能没有自己编写功能，但从另一个程序员那里获得它作为“黑盒子”。用户只需要调用，不需要知道实现该功能的细节。 Python库具有此属性。许多开发人员使用这里定义的函数，但很少有人去研究它们的实现。</p>
+<p><strong>函数式抽象</strong>。要掌握函数式抽象，需要考虑三个核心属性。函数的域是它可以使用的参数集合；函数的范围是返回值的集合；函数的功能是它在输入和输出之间的关系（以及它可能产生的任何副作用）。通过函数的域，范围和意图理解函数式抽象对于在复杂程序中正确使用它们至关重要。</p>
+<p>例如，我们用于实现<code>sum_squares</code>的任何平方函数应具有以下属性：</p>
+<p>1.域是任意单个实数。<br>2.范围是任意非负实数。<br>3.功能是输出是输入的平方。<br>这些属性并没有描述功能如何实现的细节部分，它们已经被抽象了。</p>
+<h3 id="1-3-7-运算符"><a href="#1-3-7-运算符" class="headerlink" title="1.3.7 运算符"></a>1.3.7 运算符</h3><p>算术运算符（如<code>+</code>和<code>-</code>）在第一个例子中提供了组合方法，但是我们还没有定义一个包含这些运算符的表达式定义求值过程。</p>
+<p>带有中缀运算符的Python表达式都有自己的求值过程，但是您经常可以认为它们是调用表达式的快捷方式。 当您看到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 2 + 3</span><br><span class="line">5</span><br></pre></td></tr></table></figure></p>
+<p>的时候，可以简单地认为它是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; add(2, 3)</span><br><span class="line">5</span><br></pre></td></tr></table></figure></p>
+<p>的快捷方式。中缀符号可以嵌套，就像调用表达式一样。 Python运算符优先级采用了常规的数学规则，它指导了如何用多个运算符来求解复合表达式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 2 + 3 * 4 + 5</span><br><span class="line">19</span><br></pre></td></tr></table></figure></p>
+<p>它和以下表达式的求解结果完全相同<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; add(add(2, mul(3, 4)), 5)</span><br><span class="line">19</span><br></pre></td></tr></table></figure></p>
+<p>调用表达式中的嵌套比运算符版本更加明显，但也更难以阅读。 Python还允许使用括号对子表达式进行分组，以覆盖通常的优先级规则，或使表达式的嵌套结构更加明显。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; (2 + 3) * (4 + 5)</span><br><span class="line">45</span><br></pre></td></tr></table></figure></p>
+<p>它和以下表达式的求解结果完全相同<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; mul(add(2, 3), add(4, 5))</span><br><span class="line">45</span><br></pre></td></tr></table></figure></p>
+<p>对于除法，Python提供了两个中缀运算符：<code>/</code>和<code>//</code>。 前者是常规除法，及时是整除，结果也是浮点数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 5 / 4</span><br><span class="line">1.25</span><br><span class="line">&gt;&gt;&gt; 8 / 4</span><br><span class="line">2.0</span><br></pre></td></tr></table></figure></p>
+<p>后一个运算符<code>//</code>,直接将结果舍入到一个整数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 5 // 4</span><br><span class="line">1</span><br><span class="line">&gt;&gt;&gt; -5 // 4</span><br><span class="line">-2</span><br></pre></td></tr></table></figure></p>
+<p>这两个运算符是对<code>truediv</code>和<code>floordiv</code>函数的快捷方式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from operator import truediv, floordiv</span><br><span class="line">&gt;&gt;&gt; truediv(5, 4)</span><br><span class="line">1.25</span><br><span class="line">&gt;&gt;&gt; floordiv(5, 4)</span><br><span class="line">1</span><br></pre></td></tr></table></figure></p>
+<p>您应该在程序中自由使用中缀操作符和括号。对于简单的算术运算，Python在惯例上倾向于使用运算符而不是调用表达式。</p>
+<hr>
+
           
         
       
@@ -876,7 +1824,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="文档：2.3 Sequence 参考：cs61a.org/spring2017   2.3 序列序列是数据值的顺序容器。序列在计算机科学中是强大而基本的抽象。序列不是特定的抽象数据类型，而是不同类型共有的一组行为。也就是说，它们是许多序列种类，但是都有一定的属性。特别地,长度。序列拥有有限的长度。空的序列长度为0。元素选择。序列的每个元素都拥有相应的非负整数作为下标，它小于序列长度，以第一个元素">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP 第二章 使用数据构建抽象 2.3 序列">
+<meta property="og:url" content="http://yoursite.com/2018/01/20/post2-3/index.html">
+<meta property="og:site_name" content="lambda-lambda">
+<meta property="og:description" content="文档：2.3 Sequence 参考：cs61a.org/spring2017   2.3 序列序列是数据值的顺序容器。序列在计算机科学中是强大而基本的抽象。序列不是特定的抽象数据类型，而是不同类型共有的一组行为。也就是说，它们是许多序列种类，但是都有一定的属性。特别地,长度。序列拥有有限的长度。空的序列长度为0。元素选择。序列的每个元素都拥有相应的非负整数作为下标，它小于序列长度，以第一个元素">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-20T15:26:54.344Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SICP 第二章 使用数据构建抽象 2.3 序列">
+<meta name="twitter:description" content="文档：2.3 Sequence 参考：cs61a.org/spring2017   2.3 序列序列是数据值的顺序容器。序列在计算机科学中是强大而基本的抽象。序列不是特定的抽象数据类型，而是不同类型共有的一组行为。也就是说，它们是许多序列种类，但是都有一定的属性。特别地,长度。序列拥有有限的长度。空的序列长度为0。元素选择。序列的每个元素都拥有相应的非负整数作为下标，它小于序列长度，以第一个元素">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/20/post2-3/"/>
+
+
+
+
+
+  <title>SICP 第二章 使用数据构建抽象 2.3 序列 | lambda-lambda</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lambda-lambda</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/20/post2-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lambda-lambda">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lambda-lambda">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SICP 第二章 使用数据构建抽象 2.3 序列</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T23:23:32+08:00">
+                2018-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>文档：<a href="http://composingprograms.com/pages/23-sequences.html" target="_blank" rel="noopener">2.3 Sequence
+</a><br>参考：<a href="https://cs61a.org/" target="_blank" rel="noopener">cs61a.org/spring2017</a></p>
+</blockquote>
+<hr>
+<h2 id="2-3-序列"><a href="#2-3-序列" class="headerlink" title="2.3 序列"></a>2.3 序列</h2><p>序列是数据值的顺序容器。序列在计算机科学中是强大而基本的抽象。序列不是特定的抽象数据类型，而是不同类型共有的一组行为。也就是说，它们是许多序列种类，但是都有一定的属性。特别地,<br>长度。序列拥有有限的长度。空的序列长度为0。<br>元素选择。序列的每个元素都拥有相应的非负整数作为下标，它小于序列长度，以第一个元素的 0 开始。<br>Python中有各种序列的数据类型，其中最重要的一种是list列表。</p>
+<h3 id="2-3-1-列表"><a href="#2-3-1-列表" class="headerlink" title="2.3.1 列表"></a>2.3.1 列表</h3><p>列表值是可以任意长度的序列。列表有大量的内置行为，并带有表达这些行为的特定的语法。我们已经介绍过list literal，它计算了一个列表实例，以及元素选择表达式。内置的len函数返回序列的长度。下面，数字是一个有四个元素的列表。序号索引3中的元素是8。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; digits = [1, 8, 2, 8]</span><br><span class="line">&gt;&gt;&gt; len(digits)</span><br><span class="line">4</span><br><span class="line">&gt;&gt;&gt; digits[3]</span><br><span class="line">8</span><br></pre></td></tr></table></figure></p>
+<p>此外，列表可以相加或者于整数做乘法。对于序列，加法或乘法不会增添元素，而是组合或者复制序列本身。也就是说，运算符模块中的add函数生成了一个列表，它连接了add的参数。操作符中的mul函数可以使用一个列表和一个整数k来返回包含k次重复项的原始列表。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; [2, 7] + digits * 2</span><br><span class="line">[2, 7, 1, 8, 2, 8, 1, 8, 2, 8]</span><br></pre></td></tr></table></figure></p>
+<p>任何值都可以包含在列表中，包括另一个列表。元素选择可以多次应用，来在包含列表的列表中选择深层嵌套的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; pairs = [[10, 20], [30, 40]]</span><br><span class="line">&gt;&gt;&gt; pairs[1]</span><br><span class="line">[30, 40]</span><br><span class="line">&gt;&gt;&gt; pairs[1][0]</span><br><span class="line">30</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-3-2-序列迭代"><a href="#2-3-2-序列迭代" class="headerlink" title="2.3.2 序列迭代"></a>2.3.2 序列迭代</h3><p>在大多数情况下，我们希望能遍历序列中的元素，并依次为每个元素执行一些计算。这种模式非常常见，Python有一个额外的控制语句来处理顺序数据：for语句。<br>现在我们需要考虑一个值在序列中出现次数的问题。我们可以使用while循环来实现一个计数函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def count(s, value):</span><br><span class="line">        &quot;&quot;&quot;Count the number of occurrences of value in sequence s.&quot;&quot;&quot;</span><br><span class="line">        total, index = 0, 0</span><br><span class="line">        while index &lt; len(s):</span><br><span class="line">            if s[index] == value:</span><br><span class="line">                total = total + 1</span><br><span class="line">            index = index + 1</span><br><span class="line">        return total</span><br><span class="line">&gt;&gt;&gt; count(digits, 8)</span><br><span class="line">2</span><br></pre></td></tr></table></figure></p>
+<p>Python 中的for语句可以通过直接遍历元素值来简化该函数体，而无需引入名称索引（index）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def count(s, value):</span><br><span class="line">        &quot;&quot;&quot;Count the number of occurrences of value in sequence s.&quot;&quot;&quot;</span><br><span class="line">        total = 0</span><br><span class="line">        for elem in s:</span><br><span class="line">            if elem == value:</span><br><span class="line">                total = total + 1</span><br><span class="line">        return total</span><br><span class="line">&gt;&gt;&gt; count(digits, 8)</span><br><span class="line">2</span><br></pre></td></tr></table></figure></p>
+<p>一个for语句由一个以下形式的简单语句组成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for &lt;name&gt; in &lt;expression&gt;:</span><br><span class="line">    &lt;suite&gt;</span><br></pre></td></tr></table></figure></p>
+<p>一个for语句由以下步骤执行：</p>
+<ol>
+<li>评估开始的<expression>表达式，它必须能生成可迭代的值。</expression></li>
+<li>对可迭代值中的每个元素，依次：在当前帧中绑定<name>到该值上。</name></li>
+<li>执行<suite>。<br>这个执行过程是指可迭代的值。列表是一种序列，序列是可迭代的值。它们的元素按顺序被依次考虑。Python包含其他可迭代类型，但我们现在将重点聚焦序列；“iterable”这个术语的定义出现在第4章的迭代器部分。<br>这个评估过程的一个重要结果是&lt; name &gt;将被绑定到执行语句之后的序列的最后一个元素上。for循环还引入了另一种可以通过语句更新环境的方法。<br>序列拆封。程序中一个常见的模式是，有一个元素序列，这些元素本身是序列，但都是固定长度的。for语句可能包括在其头中的多个名称，以“解压缩”每个元素序列到其各自的元素中。例如，我们可能有一个两元素列表的列表。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; pairs = [[1, 2], [2, 2], [2, 3], [4, 4]]</span><br></pre></td></tr></table></figure>
+</suite></li>
+</ol>
+<p>我们希望能找到拥有相同第一和第二元素的pair的数目。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; same_count = 0</span><br></pre></td></tr></table></figure></p>
+<p>下面的for语句的header有两个名称，它们分别将x和y绑定在每个pair的第一和第二个元素上。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; for x, y in pairs:</span><br><span class="line">        if x == y:</span><br><span class="line">            same_count = same_count + 1</span><br><span class="line">&gt;&gt;&gt; same_count</span><br><span class="line">2</span><br></pre></td></tr></table></figure></p>
+<p>这种将多个名称绑定到固定长度序列中的多个值的模式称为序列解压缩；这与我们在赋值语句中看到的绑定多个名称到多个值的模式相同。<br>范围（range）。范围是Python中另一个内置类型的序列，他表示一个整数范围。范围是用范围创建的，它需要两个整数参数：第一个数字和一个大于所需区间的数字。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; range(1, 10)  # Includes 1, but not 10</span><br><span class="line">range(1, 10)</span><br></pre></td></tr></table></figure></p>
+<p>在一个范围内调用列表构造函数，以与范围相同的元素来计算列表，这样就可以很容易地检查元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; list(range(5, 8))</span><br><span class="line">[5, 6, 7]</span><br></pre></td></tr></table></figure></p>
+<p>如果只给出一个参数，那么它将被解释为从0开始的范围的最后一个值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; list(range(4))</span><br><span class="line">[0, 1, 2, 3]</span><br></pre></td></tr></table></figure></p>
+<p>范围通常显示在一个for语句的开头，他用来表示该循环被执行的次数：一个常见的约定是如果在循环体中未使用名称，则在for语句的开头中使用单个下划线字符。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; for _ in range(3):</span><br><span class="line">        print(&apos;Go Bears!&apos;)</span><br><span class="line"></span><br><span class="line">Go Bears!</span><br><span class="line">Go Bears!</span><br><span class="line">Go Bears!</span><br></pre></td></tr></table></figure></p>
+<p>这个下划线在解释器中是环境中的另一个名称，但是它在程序员中有一个约定俗成的说法，它表示这个名称不会出现在以后任何的表达式中。</p>
+<h3 id="2-3-3-序列处理"><a href="#2-3-3-序列处理" class="headerlink" title="2.3.3 序列处理"></a>2.3.3 序列处理</h3><p>序列是复合数据的一种常见形式，整个程序通常围绕这个抽象进行。有序列作为输入和输出的模块组件可以混合和匹配来执行数据处理。复杂的组件可以通过链接到一个序列处理操作的管道来定义，每一个过程都是简单而集中的。<br>列表表达式。可以通过对序列中每个元素的固定表达式求值，并在结果序列中收集结果值来表示许多序列处理操作。在Python中，列表表达式是执行这种计算的表达式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; odds = [1, 3, 5, 7, 9]</span><br><span class="line">&gt;&gt;&gt; [x+1 for x in odds]</span><br><span class="line">[2, 4, 6, 8, 10]</span><br></pre></td></tr></table></figure></p>
+<p>上面的关键字不是for语句的一部分，而是列表表达式的一部分，因为它包含在方括号内。子表达式x + 1被求值，同时x与奇数的每个元素相结合，结果的值被收集到一个列表中。<br>另一个常见的顺序处理操作是选择满足某些条件的值的子集。列表表达式也可以表达这个模式，例如选择所有的几率平均划分为25的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; [x for x in odds if 25 % x == 0]</span><br><span class="line">[1, 5]</span><br></pre></td></tr></table></figure></p>
+<p>列表表达式的通用形式是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&lt;map expression&gt; for &lt;name&gt; in &lt;sequence expression&gt; if &lt;filter expression&gt;]</span><br></pre></td></tr></table></figure></p>
+<p>为了对列表表达式求值，Python对&lt;序列表达式&gt;进行了求值，它必须返回一个可迭代的值。然后，对于按顺序的每个元素，元素值被绑定到&lt; name &gt;，筛选器表达式被求值，如果它产生一个真实值，则对映射表达式进行评估。将map表达式的值收集到一个列表中。<br>聚合。序列处理中的第三个常见模式是将序列中的所有值聚合为单个值。内置函数sum、min和max都是聚合函数的示例。<br>通过结合评估每个元素表达式的模式，选择元素的子集和聚合元素，我们可以使用序列处理方法来解决问题。<br>一个完美数是一个正整数，等于它的除数的和。n的除数是小于n的正整数，除以n。列出n的除数可以用一个列表表达式来表示。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def divisors(n):</span><br><span class="line">        return [1] + [x for x in range(2, n) if n % x == 0]</span><br><span class="line">&gt;&gt;&gt; divisors(4)</span><br><span class="line">[1, 2]</span><br><span class="line">&gt;&gt;&gt; divisors(12)</span><br><span class="line">[1, 2, 3, 4, 6]</span><br></pre></td></tr></table></figure></p>
+<p>使用除数，我们可以用另一个列表表达式来计算从1到1000的所有完美数。(1通常被认为是一个完美数，但它不符合我们对除数的定义。)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; [n for n in range(1, 1000) if sum(divisors(n)) == n]</span><br><span class="line">[6, 28, 496]</span><br></pre></td></tr></table></figure></p>
+<p>我们可以重新用我们对除数的定义来解决另一个问题：已知矩形面积，求边长都为整数的矩形的最小周长。矩形的面积等于高度与宽度的乘积。因此，如果已知面积和高度，我们可以计算矩形的宽度。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def width(area, height):</span><br><span class="line">        assert area % height == 0</span><br><span class="line">        return area // height</span><br></pre></td></tr></table></figure></p>
+<p>矩形的周长等于其边长之和。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def perimeter(width, height):</span><br><span class="line">        return 2 * width + 2 * height</span><br></pre></td></tr></table></figure></p>
+<p>具有整数边长的矩形的高度必须是其面积的除数。我们可以通过考虑所有高度来计算最小周长。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def minimum_perimeter(area):</span><br><span class="line">        heights = divisors(area)</span><br><span class="line">        perimeters = [perimeter(width(area, h), h) for h in heights]</span><br><span class="line">        return min(perimeters)</span><br><span class="line">&gt;&gt;&gt; area = 80</span><br><span class="line">&gt;&gt;&gt; width(area, 5)</span><br><span class="line">16</span><br><span class="line">&gt;&gt;&gt; perimeter(16, 5)</span><br><span class="line">42</span><br><span class="line">&gt;&gt;&gt; perimeter(10, 8)</span><br><span class="line">36</span><br><span class="line">&gt;&gt;&gt; minimum_perimeter(area)</span><br><span class="line">36</span><br><span class="line">&gt;&gt;&gt; [minimum_perimeter(n) for n in range(1, 10)]</span><br><span class="line">[4, 6, 8, 8, 12, 10, 16, 12, 12]</span><br></pre></td></tr></table></figure></p>
+<p>高阶函数。在序列处理中我们看到的情况常常被应用于高阶函数。首先，对一个序列里的每个元素进行求值也可以表达成对每个元素调用函数的形式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def apply_to_all(map_fn, s):</span><br><span class="line">        return [map_fn(x) for x in s]</span><br></pre></td></tr></table></figure></p>
+<p>选择表达式为真的元素，然后对其调用函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def keep_if(filter_fn, s):</span><br><span class="line">        return [x for x in s if filter_fn(x)]</span><br></pre></td></tr></table></figure></p>
+<p>最后，很多种形式的聚合可以被表达成：反复地对reduced应用二个参数的函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def reduce(reduce_fn, s, initial):</span><br><span class="line">        reduced = initial</span><br><span class="line">        for x in s:</span><br><span class="line">            reduced = reduce_fn(reduced, x)</span><br><span class="line">        return reduced</span><br></pre></td></tr></table></figure></p>
+<p>例如，reduce可以对一个序列里=的所有元素进行连乘。用mul作为reduce_fn，1作为initial值，reduce可以被<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; reduce(mul, [2, 4, 8], 1)</span><br><span class="line">64</span><br></pre></td></tr></table></figure></p>
+<p>上一节：<a href="http://www.jianshu.com/p/92a071af8563" target="_blank" rel="noopener">SICP 第一章 使用数据构建抽象 2.2 数据抽象</a><br>下一节：<a href="http://www.jianshu.com/p/92a071af8563" target="_blank" rel="noopener">SICP 第二章 使用数据构建抽象 2.4 序列</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/20/post2-2/" rel="next" title="SICP 第二章 使用数据构建抽象 2.2 数据抽象">
+                <i class="fa fa-chevron-left"></i> SICP 第二章 使用数据构建抽象 2.2 数据抽象
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lambda-lambda</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-序列"><span class="nav-number">1.</span> <span class="nav-text">2.3 序列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-1-列表"><span class="nav-number">1.1.</span> <span class="nav-text">2.3.1 列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-2-序列迭代"><span class="nav-number">1.2.</span> <span class="nav-text">2.3.2 序列迭代</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-3-序列处理"><span class="nav-number">1.3.</span> <span class="nav-text">2.3.3 序列处理</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lambda-lambda</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

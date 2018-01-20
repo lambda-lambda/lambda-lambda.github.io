@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="文档：2.2 Data Abstraction 参考：cs61a.org/spring2017   2.2 数据抽象我们总希望在程序中表达世界上许多的事物，而他们中的大多数都具有复合结构。例如，地理位置具有纬度和经度坐标。为了表示位置，我们希望编程语言能够将纬度和经度结合在一起，形成一个复合数据值，这样使程序可以作为单一的概念单元来操作。 复合数据的使用能够增加程序的模块性。如果我们可以将地理位">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP 第二章 使用数据构建抽象 2.2 数据抽象">
+<meta property="og:url" content="http://yoursite.com/2018/01/20/post2-2/index.html">
+<meta property="og:site_name" content="lambda-lambda">
+<meta property="og:description" content="文档：2.2 Data Abstraction 参考：cs61a.org/spring2017   2.2 数据抽象我们总希望在程序中表达世界上许多的事物，而他们中的大多数都具有复合结构。例如，地理位置具有纬度和经度坐标。为了表示位置，我们希望编程语言能够将纬度和经度结合在一起，形成一个复合数据值，这样使程序可以作为单一的概念单元来操作。 复合数据的使用能够增加程序的模块性。如果我们可以将地理位">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-20T15:26:42.744Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SICP 第二章 使用数据构建抽象 2.2 数据抽象">
+<meta name="twitter:description" content="文档：2.2 Data Abstraction 参考：cs61a.org/spring2017   2.2 数据抽象我们总希望在程序中表达世界上许多的事物，而他们中的大多数都具有复合结构。例如，地理位置具有纬度和经度坐标。为了表示位置，我们希望编程语言能够将纬度和经度结合在一起，形成一个复合数据值，这样使程序可以作为单一的概念单元来操作。 复合数据的使用能够增加程序的模块性。如果我们可以将地理位">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/20/post2-2/"/>
+
+
+
+
+
+  <title>SICP 第二章 使用数据构建抽象 2.2 数据抽象 | lambda-lambda</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lambda-lambda</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/20/post2-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lambda-lambda">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lambda-lambda">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SICP 第二章 使用数据构建抽象 2.2 数据抽象</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T23:22:52+08:00">
+                2018-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>文档：<a href="http://composingprograms.com/pages/22-data-abstraction.html" target="_blank" rel="noopener">2.2 Data Abstraction
+</a><br>参考：<a href="https://cs61a.org/" target="_blank" rel="noopener">cs61a.org/spring2017</a></p>
+</blockquote>
+<hr>
+<h2 id="2-2-数据抽象"><a href="#2-2-数据抽象" class="headerlink" title="2.2 数据抽象"></a>2.2 数据抽象</h2><p>我们总希望在程序中表达世界上许多的事物，而他们中的大多数都具有复合结构。例如，地理位置具有纬度和经度坐标。为了表示位置，我们希望编程语言能够将纬度和经度结合在一起，形成一个复合数据值，这样使程序可以作为单一的概念单元来操作。</p>
+<p>复合数据的使用能够增加程序的模块性。如果我们可以将地理位置作为整体值来操作，那么我们可以将程序中各部分分离，从这些位置的本质上来处理。分离和处理数据是一种强大的设计方法，称为数据抽象。数据抽象使程序更容易设计，维护和修改。</p>
+<p>数据抽象与函数抽象类似。当我们创建函数抽象时，函数实现的细节被淡化了，特定的函数本身可以被任何具有相同行为函数所替代。换句话说，我们构建抽象将函数的使用方式与函数实现的细节分离。类似地，数据抽象将如何使用复合数据值和构建方式隔离。</p>
+<p>数据抽象的基本思想是结构化程序，以便它们操作抽象数据。也就是说，我们的程序应该使用数据，而不是做出关于数据的假设。同时，数据的具体表示方式是程序的独立部分。</p>
+<p>这两部分程序：抽象数据运行的部分和定义具体表示的部分，它们通过一组小型函数相连，实现了抽象数据。为了展示这种技术，我们将介绍一组用于操纵有理数的函数。</p>
+<h3 id="2-2-1-示例-有理数运算"><a href="#2-2-1-示例-有理数运算" class="headerlink" title="2.2.1 示例:有理数运算"></a>2.2.1 示例:有理数运算</h3><p>有理数是整数的比值，它是实数的重要子类。 如1/3或17/29的有理数通常被表示为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;numerator&gt;/&lt;denominator&gt;</span><br></pre></td></tr></table></figure></p>
+<p>其中&lt;分子&gt;和&lt;分母&gt;都是值为整数的占位符。有理数的值 需要两个部分来精确地表征。 实际上将分子和分母相除会产生一个小数近似值，从而失去精确度。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 1/3</span><br><span class="line">0.3333333333333333</span><br><span class="line">&gt;&gt;&gt; 1/3 == 0.333333333333333300000  # Dividing integers yields an approximation</span><br><span class="line">True</span><br></pre></td></tr></table></figure></p>
+<p>然而，我们可以通过将分子和分母组合在一起来创建有理数的精确表示。</p>
+<p>我们从函数抽象中了解，在我们实现程序的某些部分之前，我们已经可以高效地开始编程。 我们首先假设我们已经有了一种由分子和分母构建有理数的方法。 我们还假定，给定一个有理数，我们有办法来提取它的分子和分母。 我们进一步假设构造函数和选择器可用到如下三个函数：</p>
+<ol>
+<li>rational(n，d)返回分子为n,分母为d的有理数。</li>
+<li>numer(x)返回有理数x的分子。</li>
+<li>denom(x)返回有理数x的分母。<br>在这里我们使用强大的合成策略：心想事成。 我们还没有说出有理数是如何表示的，或者numer、denom、rational如何实现。 即使如此，如果我们确定了这三个函数，我们可以执行加法，乘法，以及测试有理数的平等：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def add_rationals(x, y):</span><br><span class="line">        nx, dx = numer(x), denom(x)</span><br><span class="line">        ny, dy = numer(y), denom(y)</span><br><span class="line">        return rational(nx * dy + ny * dx, dx * dy)</span><br><span class="line">&gt;&gt;&gt; def mul_rationals(x, y):</span><br><span class="line">        return rational(numer(x) * numer(y), denom(x) * denom(y))</span><br><span class="line">&gt;&gt;&gt; def print_rational(x):</span><br><span class="line">        print(numer(x), &apos;/&apos;, denom(x))</span><br><span class="line">&gt;&gt;&gt; def rationals_are_equal(x, y):</span><br><span class="line">        return numer(x) * denom(y) == numer(y) * denom(x)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>现在我们拥有了选择器函数numer和denom，以及构造器函数rational定义的有理数操作，但是我们还没有定义这些函数。 我们需要的是将分子和分母粘合成一个复合的整体。</p>
+<p>###2.2.2 pairs<br>为了实现数据抽象的具体层面，Python提供了一个列表<code>list</code>的复合结构，它将表达式放在方括号内，用逗号分隔。 这样的表达式称为列表文字。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; [10, 20]</span><br><span class="line">[10, 20]</span><br></pre></td></tr></table></figure></p>
+<p>列表的元素可以通过两种方式访问。 第一种方式是通过我们熟悉的多重赋值法，它将一个列表分解成元素，并将每个元素绑定到一个不同的名称。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; pair = [10, 20]</span><br><span class="line">&gt;&gt;&gt; pair</span><br><span class="line">[10, 20]</span><br><span class="line">&gt;&gt;&gt; x, y = pair</span><br><span class="line">&gt;&gt;&gt; x</span><br><span class="line">10</span><br><span class="line">&gt;&gt;&gt; y</span><br><span class="line">20</span><br></pre></td></tr></table></figure></p>
+<p>访问列表元素的第二种方法是通过下标运算符，也用方括号表示。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; pair[0]</span><br><span class="line">10</span><br><span class="line">&gt;&gt;&gt; pair[1]</span><br><span class="line">20</span><br></pre></td></tr></table></figure></p>
+<p>Python中的列表（和大多数其他编程语言中的序列）下标都是从0开始索引的，这意味着下标0表示第一个元素，下标1表示第二个元素，以此类推。 我们对这个下标惯例的直觉是,下标表 示一个元素距离元组开头有多远。</p>
+<p>与元素选择操作的等效函数称为getitem，它也使用下标以0开始的位置来在列表中选择元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from operator import getitem</span><br><span class="line">&gt;&gt;&gt; getitem(pair, 0)</span><br><span class="line">10</span><br><span class="line">&gt;&gt;&gt; getitem(pair, 1)</span><br><span class="line">20</span><br></pre></td></tr></table></figure></p>
+<p>双元素列表不是在Python中表示pairs的唯一方法。 将两个值组合成一个的任何方式都可以被认为是一对pair。 列表是一种常用的方法。 列表还可以包含两个以上的元素，我们将在本章后面探讨。</p>
+<p>表示有理数。现在我们可以将一个有理数表示为一对两个整数：分子和分母。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def rational(n, d):</span><br><span class="line">        return [n, d]</span><br><span class="line">&gt;&gt;&gt; def numer(x):</span><br><span class="line">        return x[0]</span><br><span class="line">&gt;&gt;&gt; def denom(x):</span><br><span class="line">        return x[1]</span><br></pre></td></tr></table></figure></p>
+<p>与我们之前定义的算术运算一样，我们可以用我们定义的函数来操纵有理数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; half = rational(1, 2)</span><br><span class="line">&gt;&gt;&gt; print_rational(half)</span><br><span class="line">1 / 2</span><br><span class="line">&gt;&gt;&gt; third = rational(1, 3)</span><br><span class="line">&gt;&gt;&gt; print_rational(mul_rationals(half, third))</span><br><span class="line">1 / 6</span><br><span class="line">&gt;&gt;&gt; print_rational(add_rationals(third, third))</span><br><span class="line">6 / 9</span><br></pre></td></tr></table></figure></p>
+<p>正如上面的例子所示，有理数的实现并不能将有理数化为最简。 我们可以通过修改rational来弥补这个缺陷。 如果我们有一个用于计算两个整数的最大公约数的函数，我们可以在构造pair之前将分子和分母化为最简。 这种函数已经存在于Python库中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from fractions import gcd</span><br><span class="line">&gt;&gt;&gt; def rational(n, d):</span><br><span class="line">        g = gcd(n, d)</span><br><span class="line">        return (n//g, d//g)</span><br></pre></td></tr></table></figure></p>
+<p>双斜杠运算符//表示整数除法，它会向下取整除法结果的小数部分。 由于我们知道g能整除n和d，整数除法正好适用于这里。 这个修改确保了有理数表达的最低限度。</p>
+<h3 id="2-2-3-抽象界限"><a href="#2-2-3-抽象界限" class="headerlink" title="2.2.3 抽象界限"></a>2.2.3 抽象界限</h3><p>在列举更多复合数据和数据抽象的示例之前，让我们思考一下有理数的示例产生的一些问题。 我们根据构造器rational和选择器numer和denom来定义操作。 一般来说，数据抽象的底层概念是，基于某个值的类型操作表达，为这个值的类型确定一组基本的操作。之后使用这些操作来操作数据。<br>对于有理数来说，程序的不同部分使用不同的方式来操纵有理数，如下表所述。</p>
+<table>
+<thead>
+<tr>
+<th>程序的部分….</th>
+<th>把有理数作为….</th>
+<th>仅仅用作….</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用有理数演示计算</td>
+<td>所有的数据值</td>
+<td>add_rational, mul_rational, rationals_are_equal, print_rational   </td>
+</tr>
+<tr>
+<td>创造有理数和实现有理运算</td>
+<td>分子和分母</td>
+<td>rational, numer, denom</td>
+</tr>
+<tr>
+<td>实现有理数的选择器和构造器</td>
+<td>双元素列表</td>
+<td>列表文字和元素选择</td>
+</tr>
+</tbody>
+</table>
+<p>在上面的每层中，最后一列中的函数强制划分了抽象边界。 这些功能被更高级别调用，并使用较低级别的抽象来实现。</p>
+<p>只要能够使用较高级别函数的程序使用较低级别的函数，就会发生抽象边界冲突。 例如，一个计算有理数平方的函数最好用mul_rational来实现。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square_rational(x):</span><br><span class="line">        return mul_rational(x, x)</span><br></pre></td></tr></table></figure></p>
+<p>直接指向分子和分母会发生抽象边界冲突。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square_rational_violating_once(x):</span><br><span class="line">        return rational(numer(x) * numer(x), denom(x) * denom(x))</span><br></pre></td></tr></table></figure></p>
+<p>假设用包含两个元素的list来表示有理数也会发生抽象边界冲突。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def square_rational_violating_twice(x):</span><br><span class="line">        return [x[0] * x[0], x[1] * x[1]]</span><br></pre></td></tr></table></figure></p>
+<p>抽象边界冲突使程序更容易维护及修改。 依赖于特定表示的函数越少，需要改进时的发生的变更越少。即使我们改变了有理数的表示方法，square_rational平方函数也不需要更新。 相比之下，当选择器或构造函数签名更改时，square_rational_violating_once将需要更改，而只要有理数的实现方法更改，square_rational_violating_twice将需要更新。</p>
+<h3 id="2-2-4-数据属性"><a href="#2-2-4-数据属性" class="headerlink" title="2.2.4 数据属性"></a>2.2.4 数据属性</h3><p>抽象障碍塑造了我们对数据的思考。有理数字的有效表示不限于任何特定的实现（例如双元素列表）;它是由理性返回的可以传递给数字和值的值。另外，构造函数和选择符之间必须保持适当的关系。也就是说，如果我们从整数n和d构造有理数x，那么应该是numer（x）/ denom（x）等于n / d的情况。</p>
+<p>一般来说，我们可以将抽象数据类型当做一些选择器和构造器的集合。只要满足行为条件（如上述的除法属性），选择器和构造函数就构成一种数据的有效表示。抽象屏障下面的实现细节可能会改变，但是如果行为没有，则数据抽象仍然有效，并且使用此数据抽象编写的任何程序将保持正确。</p>
+<p>这个观点可以广泛应用，包括我们用来实现有理数字的pair的值。我们没有真正说过pair到底是什么，只是提及这种语言提供了用两个元素创建和操纵列表的手段。我们需要实现pair的方法是将两个值粘在一起。作为行为条件，如果一个pair ‘p’由x和y构成，那么select(p, 0)返回x, 并且select(p, 1)返回y。<br>我们并不需要用list类型来创造pairs。相反，我们可以用pair和select两个函数来表达这个概念。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def pair(x, y):</span><br><span class="line">        &quot;&quot;&quot;Return a function that represents a pair.&quot;&quot;&quot;</span><br><span class="line">        def get(index):</span><br><span class="line">            if index == 0:</span><br><span class="line">                return x</span><br><span class="line">            elif index == 1:</span><br><span class="line">                return y</span><br><span class="line">        return get</span><br><span class="line">&gt;&gt;&gt; def select(p, i):</span><br><span class="line">        &quot;&quot;&quot;Return the element at index i of pair p.&quot;&quot;&quot;</span><br><span class="line">        return p(i)</span><br></pre></td></tr></table></figure></p>
+<p>使用以上的表达，我们可以创造和操纵pairs.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; p = pair(20, 14)</span><br><span class="line">&gt;&gt;&gt; select(p, 0)</span><br><span class="line">20</span><br><span class="line">&gt;&gt;&gt; select(p, 1)</span><br><span class="line">14</span><br></pre></td></tr></table></figure></p>
+<p>这种高阶函数的使用与我们直觉的数据概念完全不同。尽管如此，这些函数足够表示pairs。函数足够表示符合数据。<br>函数式表示一对pair的要点并不是Python实际使用这种方法（处于效率的原因，列表的实现更加直接），而是它可以这样的工作。函数的表示虽然晦涩难懂，但它却是表述pairs的完全合适的方法，因为它满足了pairs需要完成的唯一条件。数据抽象的实现使我们能够轻松地在各种表示中切换。</p>
+<p>上一节：<a href="http://www.jianshu.com/p/84355484bbc8" target="_blank" rel="noopener">SICP 第一章 使用数据构建抽象 2.1 引言</a><br>下一节：<a href="http://www.jianshu.com/p/91f00ae29fcc" target="_blank" rel="noopener">SICP 第二章 使用数据构建抽象 2.3 序列</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/20/post2-1/" rel="next" title="SICP 第二章 使用数据构建抽象 2.1 引言">
+                <i class="fa fa-chevron-left"></i> SICP 第二章 使用数据构建抽象 2.1 引言
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/20/post2-3/" rel="prev" title="SICP 第二章 使用数据构建抽象 2.3 序列">
+                SICP 第二章 使用数据构建抽象 2.3 序列 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lambda-lambda</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-数据抽象"><span class="nav-number">1.</span> <span class="nav-text">2.2 数据抽象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-示例-有理数运算"><span class="nav-number">1.1.</span> <span class="nav-text">2.2.1 示例:有理数运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-3-抽象界限"><span class="nav-number">1.2.</span> <span class="nav-text">2.2.3 抽象界限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-4-数据属性"><span class="nav-number">1.3.</span> <span class="nav-text">2.2.4 数据属性</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lambda-lambda</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

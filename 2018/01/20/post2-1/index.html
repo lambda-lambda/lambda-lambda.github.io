@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="文档：2.1 Introduction 参考：cs61a.org/spring2017   2.1 引言在第1章中，我们学习了在程序设计中的计算过程和函数的功能。 我们学习了如何使用原始数据（数字）和原始操作（算术），如何通过组合和控制构建复合函数，以及如何通过给进程命名来创建功能抽象。 我们还学习了，高阶函数如何通过一般的操作提高效率。 这些就是编程的本质。 本章重点介绍数据。 我们在本章研究">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP 第二章 使用数据构建抽象 2.1 引言">
+<meta property="og:url" content="http://yoursite.com/2018/01/20/post2-1/index.html">
+<meta property="og:site_name" content="lambda-lambda">
+<meta property="og:description" content="文档：2.1 Introduction 参考：cs61a.org/spring2017   2.1 引言在第1章中，我们学习了在程序设计中的计算过程和函数的功能。 我们学习了如何使用原始数据（数字）和原始操作（算术），如何通过组合和控制构建复合函数，以及如何通过给进程命名来创建功能抽象。 我们还学习了，高阶函数如何通过一般的操作提高效率。 这些就是编程的本质。 本章重点介绍数据。 我们在本章研究">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-20T15:26:32.010Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SICP 第二章 使用数据构建抽象 2.1 引言">
+<meta name="twitter:description" content="文档：2.1 Introduction 参考：cs61a.org/spring2017   2.1 引言在第1章中，我们学习了在程序设计中的计算过程和函数的功能。 我们学习了如何使用原始数据（数字）和原始操作（算术），如何通过组合和控制构建复合函数，以及如何通过给进程命名来创建功能抽象。 我们还学习了，高阶函数如何通过一般的操作提高效率。 这些就是编程的本质。 本章重点介绍数据。 我们在本章研究">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/20/post2-1/"/>
+
+
+
+
+
+  <title>SICP 第二章 使用数据构建抽象 2.1 引言 | lambda-lambda</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lambda-lambda</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/20/post2-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lambda-lambda">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lambda-lambda">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SICP 第二章 使用数据构建抽象 2.1 引言</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T23:22:42+08:00">
+                2018-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>文档：<a href="http://composingprograms.com/pages/21-introduction.html" target="_blank" rel="noopener">2.1 Introduction
+</a><br>参考：<a href="https://cs61a.org/" target="_blank" rel="noopener">cs61a.org/spring2017</a></p>
+</blockquote>
+<hr>
+<h2 id="2-1-引言"><a href="#2-1-引言" class="headerlink" title="2.1 引言"></a>2.1 引言</h2><p>在第1章中，我们学习了在程序设计中的计算过程和函数的功能。 我们学习了如何使用原始数据（数字）和原始操作（算术），如何通过组合和控制构建复合函数，以及如何通过给进程命名来创建功能抽象。 我们还学习了，高阶函数如何通过一般的操作提高效率。 这些就是编程的本质。</p>
+<p>本章重点介绍数据。 我们在本章研究的技术将使我们能够表达和操纵不同领域的信息。 由于互联网的爆炸性增长，大量的结构化信息可以免费从网上获得，计算可以广泛应用于不同问题。 有效使用内置和用户定义的数据类型是数据处理的基础。</p>
+<h3 id="2-1-1-原始数据类型"><a href="#2-1-1-原始数据类型" class="headerlink" title="2.1.1 原始数据类型"></a>2.1.1 原始数据类型</h3><p>python里的每一个值都有一个类型。相同类型的数据表现也相仿。例如：整数1和2都是<code>int</code>类型的实例。内置函数<code>type</code>可以让我们查看值的类型.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; type(2)</span><br><span class="line">&lt;class &apos;int&apos;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>我们迄今为止使用的值是Python语言内置的少量原始数据类型的实例。 原始数据类型具有以下属性：</p>
+<p>1.原始表达式可以计算这些类型的值，称为<code>literal</code>字面量。<br>2.内置函数和运算符可以来操作这些值。<br><code>int</code>类是用于表示整数的原始数据类型。 整数字面量（相邻数字的序列）求值为int值，算术运算符操作数值对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 12 + 3000000000000000000000000</span><br><span class="line">3000000000000000000000012</span><br></pre></td></tr></table></figure></p>
+<p>Python 包含了三个原始数值类型:整数( int )、实数( float )和复数 ( complex )。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; type(1.5)</span><br><span class="line">&lt;class &apos;float&apos;&gt;</span><br><span class="line">&gt;&gt;&gt; type(1+1j)</span><br><span class="line">&lt;class &apos;complex&apos;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>名称<code>float</code>来源于实数在 Python 中表示的方式:“浮点”表示。虽然数值表示的细节不是这章的话题,一些 int 和 float 对象的高层差异仍然很重要。特别是, int 对象只能表示整数,但是表示得更精确,不带有任何近似。另一方面, float 对象可以表示很大范围内的分数,但是不能表示所有有理数。然而,浮点对象通常用于近似表示实数和有理数,舍入到某个有效数字的数值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 7 / 3 * 3</span><br><span class="line">7.0</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 1 / 3 * 7 * 3</span><br><span class="line">6.999999999999999</span><br></pre></td></tr></table></figure>
+<p>将一个int除以另一个就会产生一个浮点值：对两个整数的实际比例进行近似。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; type(1/3)</span><br><span class="line">&lt;class &apos;float&apos;&gt;</span><br><span class="line">&gt;&gt;&gt; 1/3</span><br><span class="line">0.3333333333333333</span><br></pre></td></tr></table></figure></p>
+<p>当我们进行是否相等的测试时，会出现这种近似的问题。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 1/3 == 0.333333333333333312345  # Beware of float approximation</span><br><span class="line">True</span><br></pre></td></tr></table></figure></p>
+<p>int和float类之间的微妙差异对于程序编写很有影响，因此它们是程序员必须记住的细节。幸运的是，原始数据类型很少，这大大减少了我们熟练编程语言所需的记忆量。此外，这些相同的细节在许多编程语言中是一致的，由<a href="http://en.wikipedia.org/wiki/IEEE_floating_point" target="_blank" rel="noopener">IEEE 754 floating point standard</a>等社区准则执行。</p>
+<p>非数字类型。数值可以表示许多其他类型的数据，例如声音，图像，位置，网址，网络连接等。一些由原始数据类型表示，例如值为<code>True</code>和<code>False</code>的<code>bool</code>类。</p>
+<p>以下部分将介绍Python中更多的原始数据类型，重点介绍其在创建数据抽象中的作用。对于有兴趣了解更多细节的人，在线书籍“Dive Into Python 3”中有关原始数据类型的一章，将对所有Python本机数据类型以及如何操作它们进行实用的概述，包括大量使用示例和实践。</p>
+<p>上一节：<a href="http://www.jianshu.com/p/69081ac061d9" target="_blank" rel="noopener">SICP 第一章 使用函数抽象概念 1.7 递归函数</a><br>下一节：<a href="http://www.jianshu.com/p/92a071af8563" target="_blank" rel="noopener">SICP 第二章 使用数据构建抽象 2.2 数据抽象</a></p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/20/post1-7/" rel="next" title="SICP 第一章 使用函数抽象概念 1.7 递归函数">
+                <i class="fa fa-chevron-left"></i> SICP 第一章 使用函数抽象概念 1.7 递归函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/20/post2-2/" rel="prev" title="SICP 第二章 使用数据构建抽象 2.2 数据抽象">
+                SICP 第二章 使用数据构建抽象 2.2 数据抽象 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">lambda-lambda</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-引言"><span class="nav-number">1.</span> <span class="nav-text">2.1 引言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-1-原始数据类型"><span class="nav-number">1.1.</span> <span class="nav-text">2.1.1 原始数据类型</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lambda-lambda</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
